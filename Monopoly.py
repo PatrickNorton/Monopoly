@@ -296,8 +296,12 @@ class board:
         victim.space = 10
 
     def playerinit(self):
-        numbers = input('How many players? ')
-        numbers = int(numbers)
+        validinput = False
+        while not validinput:
+            numbers = input('How many players? ')
+            if numbers.isdigit():
+                numbers = int(numbers)
+                validinput = True
         # TODO: Fix if user doesn't input an int
         playerlist = []
         for x in range(1, numbers+1):
