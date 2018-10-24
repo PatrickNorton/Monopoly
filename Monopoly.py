@@ -47,6 +47,10 @@ class player:
         else:
             print("You can't do that")
 
+    def changename(self, newname):
+        self.NAME = newname
+        print(f"Your new name is {self.NAME}")
+
 
 class space:
     def __init__(self, color, name, cost, housecost, *rent):
@@ -302,13 +306,15 @@ class board:
             if numbers.isdigit():
                 numbers = int(numbers)
                 validinput = True
-        # TODO: Fix if user doesn't input an int
+            else:
+                print('Invalid input. Please input an integer.')
         playerlist = []
         for x in range(1, numbers+1):
             while len(playerlist) < x:
                 invar = input(f"Player {x}, what's your name? ")
                 if not playerlist or invar not in playerlist[0].namelist:
                     playerlist.append(player(invar))
+        # TODO: Change names after the first input
         return playerlist
 
     def landing(self, player):
