@@ -1,0 +1,15 @@
+Advance to Go, 0, False, False, None
+Advance to Illinois Avenue, 0, False, False, 24
+Advance to St. Charles Place, 0, False, False, 11
+Advance to Short Line, 0, False, False, 35
+Advance to Pennsy Railroad, 0, False, False, 15
+Bank pays you $50, 50, False, False, None
+Get out of Jail Free, 0, False, True, None
+Go back 3 spaces, 0, False, False, -3
+Go to Jail. Go directly to Jail, 0, False, False, 10
+Pay speeding fine of 15, -15, False, False, None
+Take a trip to Reading Railroad, 0, False, False, 5
+Advance to Boardwalk, 0, False, False, 39
+Pay each player $50, -50, True, False, None
+Your building loan matures. Collect $150, 150, False, False, None
+You have won a crossword competition. Collect $100, 100, False, False, None

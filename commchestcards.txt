@@ -1,0 +1,15 @@
+Advance to Go, 0, False, False, 0
+Bank error in your favor. Collect $200, 200, False, False, None
+Doctor's fees. Pay $50, -50, False, False, None
+Sell stock. Collect $50, 50, False, False, None
+Get out of Jail Free, 0, False, True, None
+Go to Jail, 0, False, False, 10
+Grand Opera Night. Collect $50 from each player, 50, True, False, None
+Xmas. Collect $100, 100, False, False, None
+Tax refund. Collect $20, 20, False, False, None
+It's your birthday. Collect $10 from each player, 10, False, False, None
+Insurance matures. Collect $100, 100, False, False, None
+Hospital fees. Pay $50, -50, False, False, None
+Recieve consultancy fee. Collect $25, 25, False, False, None
+You have won second prize in a beauty contest. Collect $10, 10, False, False, None
+Inheritance. Collect $100, 100, False, False, None
