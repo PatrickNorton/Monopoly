@@ -13,3 +13,4 @@ Advance to Boardwalk, 0, False, False, 39
 Pay each player $50, -50, True, False, None
 Your building loan matures. Collect $150, 150, False, False, None
 You have won a crossword competition. Collect $100, 100, False, False, None
+General repairs: Pay $20/house, $100 per hotel you own, 20, False, False, None, 100

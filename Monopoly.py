@@ -1,3 +1,4 @@
+from random import randint, shuffle
 class cards:
     def __init__(self, text):
         textlist = text.split(',')
@@ -110,13 +111,12 @@ class utility(space):
     def addhouse(self): raise NotImplementedError
 
     def payrent(self, victim):
-        import random
         utillist = (utility('Electric Company'), utility('Water Works'))
         if all(self.owner == x.owner for x in utillist):
             paidvar = 10
         else:
             paidvar = 4
-        die1, die2 = random.randint(1, 6), random.randint(1, 6)
+        die1, die2 = randint(1, 6), randint(1, 6)
         rent = paidvar*sum(die1, die2)
         victim.bank -= rent
         self.owner.bank += rent
@@ -215,11 +215,10 @@ class drawspace(nonproperty):
 
 
 class commchest(drawspace):
-    import random
     with open('commchestcards.txt') as thecards:
         thecards.readlines()
         cccards = [cards(x) for x in thecards]
-        random.shuffle(cccards)
+        shuffle(cccards)
 
     def __init__(self):
         super().__init__('Community Chest')
@@ -229,11 +228,10 @@ class commchest(drawspace):
 
 
 class chance(drawspace):
-    import random
     with open('chancecards.txt') as thecards:
         thecards = thecards.readlines()
         chcards = [cards(x) for x in thecards]
-        random.shuffle(chcards)
+        shuffle(chcards)
 
     def __init__(self):
         super().__init__('Chance')
@@ -278,7 +276,6 @@ class board:
             return self.SIDES[row][space]
 
     def move(self, player):
-        from random import randint
         global moveto
         moveto = None
         spaces = (randint(1, 6), randint(1, 6))

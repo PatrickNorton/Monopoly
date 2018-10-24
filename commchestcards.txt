@@ -13,3 +13,4 @@ Hospital fees. Pay $50, -50, False, False, None
 Recieve consultancy fee. Collect $25, 25, False, False, None
 You have won second prize in a beauty contest. Collect $10, 10, False, False, None
 Inheritance. Collect $100, 100, False, False, None
+Assessed for street repairs: Pay $40/house and $115/hotel you own, 40, False, False, None, 115
