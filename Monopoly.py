@@ -21,7 +21,7 @@ class cards:
             self.KEEP,
             self.MOVE,
             self.HOUSECH
-            ) = data
+        ) = data
 
 
 class player:
@@ -60,8 +60,10 @@ class space:
         self.hotels = 0
         self.mortgaged = False
         self.occupants = []
-        if cost is not None: self.MORTGAGE = cost//2
-        else: self.MORTGAGE = None
+        if cost is not None:
+            self.MORTGAGE = cost//2
+        else:
+            self.MORTGAGE = None
 
     def __eq__(self, other): return self.NAME == other.NAME
 
@@ -110,8 +112,8 @@ class utility(space):
             paidvar = 10
         else:
             paidvar = 4
-        die1, die2 = random.randint(1,6), random.randint(1,6)
-        rent = paidvar*sum(die1,die2)
+        die1, die2 = random.randint(1, 6), random.randint(1, 6)
+        rent = paidvar*sum(die1, die2)
         victim.bank -= rent
         self.owner.bank += rent
 
@@ -318,12 +320,12 @@ class row:
         with open('monopolyspaces.txt') as data:
             data = data.readlines()
             data = [x.strip() for x in data]
-            self.txttopiece(data,number)
+            self.txttopiece(data, number)
             print(self.SPACES)
 
     def __getitem__(self, index): return self.SPACES[index]
 
-    def txttopiece(self,data,number):
+    def txttopiece(self, data, number):
         reading = False
         for line in data:
             if line == str(number):
@@ -333,9 +335,9 @@ class row:
             elif reading:
                 line = line.split(',')
                 tospace = [None for _ in range(10)]
-                for num,y in enumerate(line):
+                for num, y in enumerate(line):
                     y = y.strip()
-                    if y[0] in ('*','+'):
+                    if y[0] in ('*', '+'):
                         self.SPACES.append(self.nonprop(line))
                         break
                     elif y.isdigit():
@@ -345,15 +347,15 @@ class row:
                 else:
                     self.SPACES.append(space(*tospace))
 
-    def nonprop(self,text):
+    def nonprop(self, text):
         text = [x.strip() for x in text]
         if text[0][0] == '*':
-            magiclist = ['Commchest','Incometax','Chance','Luxurytax']
+            magiclist = ['Commchest', 'Incometax', 'Chance', 'Luxurytax']
             magicint = magiclist.index(text[0][1:])
-            magiclist = [commchest,incometax,chance,luxurytax]
+            magiclist = [commchest, incometax, chance, luxurytax]
             return magiclist[magicint]()
         elif text[0][0] == '+':
-            magiclist = ['Railroad','Utility']
+            magiclist = ['Railroad', 'Utility']
             magicint = magiclist.index(text[0][1:])
-            magiclist = [railroad,utility]
+            magiclist = [railroad, utility]
             return magiclist[magicint](text[1])
