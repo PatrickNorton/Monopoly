@@ -1,20 +1,11 @@
 from random import randint, shuffle
+
+
 class cards:
     def __init__(self, text):
         textlist = text.split(',')
         textlist = [x.strip() for x in textlist]
-        data = [None for _ in range(6)]
-        for y, x in enumerate(textlist):
-            if x == 'True':
-                data[y] = True
-            elif x == 'False':
-                data[y] = False
-            elif x == 'None':
-                data[y] = None,
-            elif x[1:].isdigit():
-                data[y] = int(x)
-            else:
-                data[y] = x
+        data = self.txttodata(*textlist)
         (
             self.TEXT,
             self.REWARD,
@@ -23,6 +14,19 @@ class cards:
             self.MOVE,
             self.HOUSECH
         ) = data
+
+    def txttodata(self, txt, rw, fmoth, keep, mv, hch=None):
+        data = [txt, rw, fmoth, keep, mv, hch]
+        for y, x in enumerate(data):
+            if x == 'True':
+                data[y] = True
+            elif x == 'False':
+                data[y] = False
+            elif x == 'None':
+                data[y] = None
+            elif x[1:].isdigit():
+                data[y] = int(x)
+        return data
 
 
 class player:
@@ -144,6 +148,8 @@ class railroad(space):
 class nonproperty(space):
     def __init__(self, name):
         super().__init__(None, name, None, None, None)
+
+    def __eq__(self, other): return type(self) == type(other)
 
     def land(self, victim): self.occupants.append(victim)
 
