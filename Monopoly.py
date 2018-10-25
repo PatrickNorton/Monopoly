@@ -36,7 +36,7 @@ class player:
         self.NAME = name
         self.bank = 1500
         self.space = 0
-        self.ownedh = 0
+        self.houseno = 0
         self.keptcards = []
         self.owned = []
         self.namelist.append(name)
