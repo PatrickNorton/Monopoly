@@ -281,6 +281,19 @@ class board:
             space = index % 10 - 1
             return self.SIDES[row][space]
 
+    def turnbyturn(self):
+        game = True
+        self.currentplayer = self.PLAYERS[0]
+        self.turnno = 0
+        while game:
+            dice = self.move(self.currentplayer)
+            if dice[0] == dice[1]:
+                pass
+            else:
+                self.turnno += 1
+                self.turnno %= len(self.PLAYERS)
+                self.currentplayer = self.PLAYERS[self.turnno]
+
     def move(self, player):
         global moveto
         moveto = None
