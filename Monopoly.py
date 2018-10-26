@@ -1,4 +1,5 @@
 from random import randint, shuffle
+from mod import Mod
 
 
 class cards:
@@ -35,7 +36,7 @@ class player:
     def __init__(self, name):
         self.NAME = name
         self.bank = 1500
-        self.space = 0
+        self.space = Mod(0,40)
         self.houseno = 0
         self.keptcards = []
         self.owned = []
@@ -284,14 +285,13 @@ class board:
     def turnbyturn(self):
         game = True
         self.currentplayer = self.PLAYERS[0]
-        self.turnno = 0
+        self.turnno = Mod(0,len(self.PLAYERS))
         while game:
             dice = self.move(self.currentplayer)
             if dice[0] == dice[1]:
                 pass
             else:
                 self.turnno += 1
-                self.turnno %= len(self.PLAYERS)
                 self.currentplayer = self.PLAYERS[self.turnno]
 
     def move(self, player):
@@ -300,9 +300,8 @@ class board:
         spaces = (randint(1, 6), randint(1, 6))
         self[player.space].occupants.remove(player)
         player.space += sum(spaces)
-        if player.space > 40:
+        if player.space < sum(spaces):
             player.bank += 200
-        player.space %= 40
         self.landing(player)
         if moveto is not None:
             self[player.space].occupants.remove(player)
