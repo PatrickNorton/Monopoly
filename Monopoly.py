@@ -287,6 +287,8 @@ class board:
         spaces = (randint(1, 6), randint(1, 6))
         self[player.space].occupants.remove(player)
         player.space += sum(spaces)
+        if player.space > 40:
+            player.bank += 200
         player.space %= 40
         self.landing(player)
         if moveto is not None:
