@@ -287,7 +287,7 @@ class board:
         self.currentplayer = self.PLAYERS[0]
         self.turnno = Mod(0,len(self.PLAYERS))
         while game:
-            actions = input("Are there any actions you wish to preform? ").lower()
+            actions = input("Are there any actions you wish to perform? ").lower()
             if actions == 'change name':
                 newname = input('To what do you wish to change your name? ')
                 self.currentplayer.changename(newname)
