@@ -287,6 +287,13 @@ class board:
         self.currentplayer = self.PLAYERS[0]
         self.turnno = Mod(0,len(self.PLAYERS))
         while game:
+            actions = input("Are there any actions you wish to preform? ").lower()
+            if actions == 'change name':
+                newname = input('To what do you wish to change your name? ')
+                self.currentplayer.changename(newname)
+            elif actions == 'Trade':
+                pass
+                # TODO: Trades
             dice = self.move(self.currentplayer)
             if dice[0] == dice[1]:
                 pass
