@@ -201,8 +201,8 @@ class drawspace(nonproperty):
         super().land(victim)
         card = cardlist[0]
         if card.HOUSECH is not None:
-            victim.bank += card.REWARD*victim.houses
-            victim.bank += card.HOUSECH*victim.hotels
+            victim.bank -= card.REWARD*victim.houses
+            victim.bank -= card.HOUSECH*victim.hotels
         elif card.REWARD is not None:
             if card.FROMOTHERS:
                 for player in victlist:
