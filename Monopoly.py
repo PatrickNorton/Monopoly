@@ -284,22 +284,22 @@ class board:
 
     def turnbyturn(self):
         game = True
-        self.currentplayer = self.PLAYERS[0]
+        self.current = self.PLAYERS[0]
         self.turnno = Mod(0,len(self.PLAYERS))
         while game:
             actions = input("Are there any actions you wish to perform? ").lower()
             if actions == 'change name':
                 newname = input('To what do you wish to change your name? ')
-                self.currentplayer.changename(newname)
+                self.current.changename(newname)
             elif actions == 'Trade':
                 pass
                 # TODO: Trades
-            dice = self.move(self.currentplayer)
+            dice = self.move(self.current)
             if dice[0] == dice[1]:
                 pass
             else:
                 self.turnno += 1
-                self.currentplayer = self.PLAYERS[self.turnno]
+                self.current = self.PLAYERS[self.turnno]
 
     def move(self, player):
         global moveto
