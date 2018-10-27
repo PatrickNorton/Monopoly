@@ -1,6 +1,6 @@
+# TODO: Rent, negative money dealings-with
 from random import randint, shuffle
 from mod import Mod
-
 
 class cards:
     def __init__(self, text):
