@@ -2,6 +2,7 @@
 from random import randint, shuffle
 from mod import Mod
 
+
 class cards:
     def __init__(self, text):
         textlist = text.split(',')
@@ -36,7 +37,7 @@ class player:
     def __init__(self, name):
         self.NAME = name
         self.bank = 1500
-        self.space = Mod(0,40)
+        self.space = Mod(0, 40)
         self.houseno = 0
         self.keptcards = []
         self.owned = []
@@ -78,7 +79,7 @@ class space:
     def __eq__(self, other): return self.NAME == other.NAME
 
     def land(self, victim):
-        if self.owner and victim != self.owner:
+        if self.owner and victim != self.owner and not self.mortgaged:
             self.payrent(victim)
         elif not self.owner:
             tosell = input(f"Would you like to buy this for ${self.COST}? ")
@@ -273,17 +274,18 @@ class board:
         self.SIDES = [row(x) for x in range(4)]
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
+        self.SPACEDICT = {x: y for x, y in enumerate(self)}
 
     def __getitem__(self, index):
-        if not index % 10:
-            return self.CORNERS[index/10]
+        if index.isdigit():
+            if not index % 10:
+                return self.CORNERS[index/10]
+            else:
+                row = index//10
+                space = index % 10 - 1
+                return self.SIDES[row][space]
         else:
-            row = index//10
-            space = index % 10 - 1
-            return self.SIDES[row][space]
-
-    def __getattr__(self, attr):
-        return self.SPACEDICT[attr]
+            return self.SPACEDICT[index]
 
     def __iter__(self):
         yield from [self[x] for x in range(40)]
@@ -291,9 +293,10 @@ class board:
     def turnbyturn(self):
         game = True
         self.current = self.PLAYERS[0]
-        self.turnno = Mod(0,len(self.PLAYERS))
+        self.turnno = Mod(0, len(self.PLAYERS))
         while game:
-            actions = input("Are there any actions you wish to perform? ").lower()
+            actions = input("Are there any actions you wish to perform? ")
+            actions = actions.lower()
             if actions == 'change name':
                 newname = input('To what do you wish to change your name? ')
                 self.current.changename(newname)
