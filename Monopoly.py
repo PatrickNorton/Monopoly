@@ -321,6 +321,8 @@ class board:
             elif actions == 'help':
                 site = "https://en.wikibooks.org/wiki/Monopoly/Official_Rules"
                 webbrowser.open(site)
+            elif actions == 'houses':
+                self.addahouse()
             dice = self.move(self.current)
             if dice[0] == dice[1]:
                 pass
@@ -386,6 +388,18 @@ class board:
             else:
                 print('This is not your property!')
 
+    def addahouse(self):
+        prop = input('Which property? ')
+        prop = prop.capwords()
+        if prop in self:
+            if self[prop] in self.current.owned:
+                hlist = self.findcolor(self[prop].color)
+                if all(x.owner == self.current for x in hlist):
+                    if self[prop].houses < 5:
+                        self[prop].addhouse
+
+    def findcolor(self, color):
+        return [x for x in self if x.COLOR == color]
 
 class row:
     def __init__(self, number):
