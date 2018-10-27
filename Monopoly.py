@@ -1,4 +1,4 @@
-# TODO: Rent, negative money dealings-with
+# TODO: Loans, negative money dealings-with
 from random import randint, shuffle
 from mod import Mod
 
