@@ -106,6 +106,16 @@ class space:
         victim.bank -= self.RENT[self.houses]
         self.owner.bank += self.RENT[self.houses]
 
+    def mortgage(self):
+        if not self.mortgaged:
+            self.owner.bank += self.MORTGAGE
+            self.mortgaged = True
+
+    def unmortgage(self):
+        if self.mortgaged:
+            self.owner.bank += self.MORTGAGE
+            self.mortgaged = False
+
 
 class utility(space):
     def __init__(self, name):
@@ -303,6 +313,10 @@ class board:
             elif actions == 'Trade':
                 pass
                 # TODO: Trades
+            elif actions == 'mortgage':
+                self.mortgagizer(1)
+            elif actions == 'demortgage':
+                self.mortgagizer(0)
             dice = self.move(self.current)
             if dice[0] == dice[1]:
                 pass
@@ -355,6 +369,18 @@ class board:
             self[player.space].land(player, self.PLAYERS)
         except TypeError:
             self[player.space].land(player)
+
+    def mortgagizer(self, morttype):
+        in2 = input('Which property? ')
+        in2 = in2.capwords()
+        if in2 in self:
+            if self[in2] in self.current.owned:
+                if morttype:
+                    self[in2].mortgage()
+                else:
+                    self[in2].demortgage()
+            else:
+                print('This is not your property!')
 
 
 class row:
