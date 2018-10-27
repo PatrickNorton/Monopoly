@@ -282,6 +282,12 @@ class board:
             space = index % 10 - 1
             return self.SIDES[row][space]
 
+    def __getattr__(self, attr):
+        return self.SPACEDICT[attr]
+
+    def __iter__(self):
+        yield from [self[x] for x in range(40)]
+
     def turnbyturn(self):
         game = True
         self.current = self.PLAYERS[0]
