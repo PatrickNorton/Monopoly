@@ -1,6 +1,7 @@
 # TODO: Loans, negative money dealings-with
 from random import randint, shuffle
 from mod import Mod
+import webbrowser
 
 
 class cards:
@@ -317,6 +318,9 @@ class board:
                 self.mortgagizer(1)
             elif actions == 'demortgage':
                 self.mortgagizer(0)
+            elif actions == 'help':
+                site = "https://en.wikibooks.org/wiki/Monopoly/Official_Rules"
+                webbrowser.open(site)
             dice = self.move(self.current)
             if dice[0] == dice[1]:
                 pass
