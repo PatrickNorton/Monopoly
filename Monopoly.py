@@ -286,6 +286,9 @@ class board:
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
         self.SPACEDICT = {x: y for x, y in enumerate(self)}
+        self.COLOROPS = {x.color for x in self}
+        self.SPBYCLR = {y: [x for x in self if x.color == y]
+                        for y in self.COLOROPS}
 
     def __getitem__(self, index):
         if index.isdigit():
@@ -400,6 +403,7 @@ class board:
 
     def findcolor(self, color):
         return [x for x in self if x.COLOR == color]
+
 
 class row:
     def __init__(self, number):
