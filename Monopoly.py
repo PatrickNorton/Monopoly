@@ -76,6 +76,7 @@ class space:
             self.MORTGAGE = cost//2
         else:
             self.MORTGAGE = None
+        self.SETNM = self.color()
 
     def __eq__(self, other): return self.NAME == other.NAME
 
@@ -292,8 +293,8 @@ class board:
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
         self.SPACEDICT = {x: y for x, y in enumerate(self)}
-        self.COLOROPS = {x.color() for x in self}
-        self.SPBYCLR = {y: [x for x in self if x.color() == y]
+        self.COLOROPS = {x.SETNM for x in self}
+        self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
                         for y in self.COLOROPS}
 
     def __getitem__(self, index):
