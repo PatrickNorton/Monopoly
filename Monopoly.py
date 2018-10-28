@@ -117,6 +117,12 @@ class space:
             self.owner.bank += self.MORTGAGE
             self.mortgaged = False
 
+    def color(self):
+        if self.COLOR is not None:
+            return self.COLOR
+        else:
+            return type(self).__name__
+
 
 class utility(space):
     def __init__(self, name):
@@ -286,8 +292,8 @@ class board:
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
         self.SPACEDICT = {x: y for x, y in enumerate(self)}
-        self.COLOROPS = {x.color for x in self}
-        self.SPBYCLR = {y: [x for x in self if x.color == y]
+        self.COLOROPS = {x.color() for x in self}
+        self.SPBYCLR = {y: [x for x in self if x.color() == y]
                         for y in self.COLOROPS}
 
     def __getitem__(self, index):
