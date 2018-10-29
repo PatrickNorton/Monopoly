@@ -133,7 +133,7 @@ class utility(prop):
     def __init__(self, name):
         super().__init__('Utility', name, 150, None, 4, 10)
 
-    def addhouse(self): raise NotImplementedError
+    def addhouse(self): raise AttributeError
 
     def payrent(self, victim):
         utillist = (utility('Electric Company'), utility('Water Works'))
@@ -154,7 +154,7 @@ class railroad(prop):
     def land(self, victim):
         super().land(victim)
 
-    def addhouse(self): raise NotImplementedError
+    def addhouse(self): raise AttributeError
 
     def payrent(self, victim):
         rrcounter = 0
