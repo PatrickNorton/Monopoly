@@ -6,3 +6,4 @@ We'll see how it works.
 Current status: (Alpha 0.3.7):
 Defined everything, cards working
 Frontend still needed - badly
+This is the backend branch. Build backend using this.

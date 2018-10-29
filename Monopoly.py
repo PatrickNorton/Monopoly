@@ -1,4 +1,7 @@
+# TODO: Loans, negative money dealings-with
 from random import randint, shuffle
+from mod import Mod
+import webbrowser
 
 
 class cards:
@@ -35,8 +38,8 @@ class player:
     def __init__(self, name):
         self.NAME = name
         self.bank = 1500
-        self.space = 0
-        self.ownedh = 0
+        self.space = Mod(0, 40)
+        self.houseno = 0
         self.keptcards = []
         self.owned = []
         self.namelist.append(name)
@@ -73,11 +76,12 @@ class space:
             self.MORTGAGE = cost//2
         else:
             self.MORTGAGE = None
+        self.SETNM = self.color()
 
     def __eq__(self, other): return self.NAME == other.NAME
 
     def land(self, victim):
-        if self.owner and victim != self.owner:
+        if self.owner and victim != self.owner and not self.mortgaged:
             self.payrent(victim)
         elif not self.owner:
             tosell = input(f"Would you like to buy this for ${self.COST}? ")
@@ -103,6 +107,22 @@ class space:
     def payrent(self, victim):
         victim.bank -= self.RENT[self.houses]
         self.owner.bank += self.RENT[self.houses]
+
+    def mortgage(self):
+        if not self.mortgaged:
+            self.owner.bank += self.MORTGAGE
+            self.mortgaged = True
+
+    def unmortgage(self):
+        if self.mortgaged:
+            self.owner.bank += self.MORTGAGE
+            self.mortgaged = False
+
+    def color(self):
+        if self.COLOR is not None:
+            return self.COLOR
+        else:
+            return type(self).__name__
 
 
 class utility(space):
@@ -200,8 +220,8 @@ class drawspace(nonproperty):
         super().land(victim)
         card = cardlist[0]
         if card.HOUSECH is not None:
-            victim.bank += card.REWARD*victim.houses
-            victim.bank += card.HOUSECH*victim.hotels
+            victim.bank -= card.REWARD*victim.houses
+            victim.bank -= card.HOUSECH*victim.hotels
         elif card.REWARD is not None:
             if card.FROMOTHERS:
                 for player in victlist:
@@ -272,14 +292,53 @@ class board:
         self.SIDES = [row(x) for x in range(4)]
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
+        self.SPACEDICT = {x.NAME: x for x in self}
+        self.COLOROPS = {x.SETNM for x in self}
+        self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
+                        for y in self.COLOROPS}
 
     def __getitem__(self, index):
-        if not index % 10:
-            return self.CORNERS[index/10]
+        if index.isdigit():
+            if not index % 10:
+                return self.CORNERS[index/10]
+            else:
+                row = index//10
+                space = index % 10 - 1
+                return self.SIDES[row][space]
         else:
-            row = index//10
-            space = index % 10 - 1
-            return self.SIDES[row][space]
+            return self.SPACEDICT[index]
+
+    def __iter__(self):
+        yield from [self[x] for x in range(40)]
+
+    def turnbyturn(self):
+        game = True
+        self.current = self.PLAYERS[0]
+        self.turnno = Mod(0, len(self.PLAYERS))
+        while game:
+            actions = input("Are there any actions you wish to perform? ")
+            actions = actions.lower()
+            if actions == 'change name':
+                newname = input('To what do you wish to change your name? ')
+                self.current.changename(newname)
+            elif actions == 'Trade':
+                pass
+                # TODO: Trades
+            elif actions == 'mortgage':
+                self.mortgagizer(1)
+            elif actions == 'demortgage':
+                self.mortgagizer(0)
+            elif actions == 'help':
+                site = "https://en.wikibooks.org/wiki/Monopoly/Official_Rules"
+                webbrowser.open(site)
+            elif actions == 'houses':
+                self.addahouse()
+            dice = self.move(self.current)
+            if dice[0] == dice[1]:
+                pass
+            else:
+                self.turnno += 1
+                self.current = self.PLAYERS[self.turnno]
 
     def move(self, player):
         global moveto
@@ -287,7 +346,8 @@ class board:
         spaces = (randint(1, 6), randint(1, 6))
         self[player.space].occupants.remove(player)
         player.space += sum(spaces)
-        player.space %= 40
+        if player.space < sum(spaces):
+            player.bank += 200
         self.landing(player)
         if moveto is not None:
             self[player.space].occupants.remove(player)
@@ -325,6 +385,31 @@ class board:
             self[player.space].land(player, self.PLAYERS)
         except TypeError:
             self[player.space].land(player)
+
+    def mortgagizer(self, morttype):
+        in2 = input('Which property? ')
+        in2 = in2.capwords()
+        if in2 in self:
+            if self[in2] in self.current.owned:
+                if morttype:
+                    self[in2].mortgage()
+                else:
+                    self[in2].demortgage()
+            else:
+                print('This is not your property!')
+
+    def addahouse(self):
+        prop = input('Which property? ')
+        prop = prop.capwords()
+        if prop in self:
+            if self[prop] in self.current.owned:
+                hlist = self.findcolor(self[prop].color)
+                if all(x.owner == self.current for x in hlist):
+                    if self[prop].houses < 5:
+                        self[prop].addhouse
+
+    def findcolor(self, color):
+        return [x for x in self if x.COLOR == color]
 
 
 class row:
