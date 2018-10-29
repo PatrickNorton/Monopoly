@@ -1,4 +1,4 @@
-# TODO: Loans, negative money dealings-with
+# TODO: Doubling rent when all of a color owned, negative money dealings-with
 from random import randint, shuffle
 from mod import Mod
 import webbrowser
