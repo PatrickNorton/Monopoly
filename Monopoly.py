@@ -427,6 +427,8 @@ class row:
 
     def __getitem__(self, index): return self.SPACES[index]
 
+    def __iter__(self): yield from self.SPACES
+
     def txttopiece(self, data, number):
         reading = False
         for line in data:
