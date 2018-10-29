@@ -69,16 +69,6 @@ class space:
 
     def land(self, victim): self.occupants.append(victim)
 
-    def sell(self, owner): raise NotImplementedError
-
-    def addhouse(self): raise NotImplementedError
-
-    def payrent(self, victim): raise NotImplementedError
-
-    def mortgage(self): raise NotImplementedError
-
-    def unmortgage(self): raise NotImplementedError
-
 
 
 
