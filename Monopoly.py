@@ -59,28 +59,35 @@ class player:
         self.NAME = newname
         print(f"Your new name is {self.NAME}")
 
-
 class space:
-    def __init__(self, color, name, cost, housecost, *rent):
+    def __init__(self, color, name):
         self.COLOR = color
         self.NAME = name
-        self.COST = cost
-        self.RENT = rent
-        self.HOUSECOST = housecost
-        self.owner = None
-        self.houses = 0
-        self.hotels = 0
-        self.mortgaged = False
         self.occupants = []
-        if cost is not None:
-            self.MORTGAGE = cost//2
-        else:
-            self.MORTGAGE = None
-        self.SETNM = self.color()
 
     def __eq__(self, other): return self.NAME == other.NAME
 
     def land(self, victim):
+        self.occupants.append(victim)
+
+
+
+
+class prop(space):
+    def __init__(self, color, name, cost, housecost, *rent):
+        super().__init__(color, name)
+        self.COST = cost
+        self.RENT = rent
+        self.HOUSECOST = housecost
+        self.MORTGAGE = cost//2
+        self.SETNM = color
+        self.owner = None
+        self.houses = 0
+        self.hotels = 0
+        self.mortgaged = False
+
+    def land(self, victim):
+        super().land(victim)
         if self.owner and victim != self.owner and not self.mortgaged:
             self.payrent(victim)
         elif not self.owner:
@@ -125,12 +132,9 @@ class space:
             return type(self).__name__
 
 
-class utility(space):
+class utility(prop):
     def __init__(self, name):
         super().__init__('Utility', name, 150, None, 4, 10)
-
-    def land(self, victim):
-        super().land(victim)
 
     def addhouse(self): raise NotImplementedError
 
@@ -146,7 +150,7 @@ class utility(space):
         self.owner.bank += rent
 
 
-class railroad(space):
+class railroad(prop):
     def __init__(self, name):
         super().__init__('Railroad', name, 200, None, 25, 50, 100, 200)
 
@@ -449,7 +453,7 @@ class row:
                     else:
                         tospace[num] = y
                 else:
-                    self.SPACES.append(space(*tospace))
+                    self.SPACES.append(prop(*tospace))
 
     def nonprop(self, text):
         text = [x.strip() for x in text]
