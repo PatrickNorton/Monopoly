@@ -179,6 +179,10 @@ class nonproperty(space):
 
     def payrent(self, victim): raise NotImplementedError
 
+    def mortgage(self): raise NotImplementedError
+
+    def unmortgage(self): raise NotImplementedError
+
 
 class gotojail(nonproperty):
     def __init__(self):
