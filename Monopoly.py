@@ -67,8 +67,17 @@ class space:
 
     def __eq__(self, other): return self.NAME == other.NAME
 
-    def land(self, victim):
-        self.occupants.append(victim)
+    def land(self, victim): self.occupants.append(victim)
+
+    def sell(self, owner): raise NotImplementedError
+
+    def addhouse(self): raise NotImplementedError
+
+    def payrent(self, victim): raise NotImplementedError
+
+    def mortgage(self): raise NotImplementedError
+
+    def unmortgage(self): raise NotImplementedError
 
 
 
@@ -175,17 +184,6 @@ class nonproperty(space):
 
     def __eq__(self, other): return type(self) == type(other)
 
-    def land(self, victim): self.occupants.append(victim)
-
-    def sell(self, owner): raise NotImplementedError
-
-    def addhouse(self): raise NotImplementedError
-
-    def payrent(self, victim): raise NotImplementedError
-
-    def mortgage(self): raise NotImplementedError
-
-    def unmortgage(self): raise NotImplementedError
 
 
 class gotojail(nonproperty):
