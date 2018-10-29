@@ -59,6 +59,7 @@ class player:
         self.NAME = newname
         print(f"Your new name is {self.NAME}")
 
+
 class space:
     def __init__(self, color, name):
         self.COLOR = color
@@ -171,7 +172,6 @@ class nonproperty(space):
         super().__init__(None, name, None, None, None)
 
     def __eq__(self, other): return type(self) == type(other)
-
 
 
 class gotojail(nonproperty):
@@ -302,8 +302,7 @@ class board:
         else:
             return self.SPACEDICT[index]
 
-    def __iter__(self):
-        yield from [self[x] for x in range(40)]
+    def __iter__(self): yield from [self[x] for x in range(40)]
 
     def turnbyturn(self):
         game = True
