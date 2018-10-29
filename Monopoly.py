@@ -70,8 +70,6 @@ class space:
     def land(self, victim): self.occupants.append(victim)
 
 
-
-
 class prop(space):
     def __init__(self, color, name, cost, housecost, *rent):
         super().__init__(color, name)
