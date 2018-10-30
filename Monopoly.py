@@ -37,6 +37,12 @@ class account:
             self.VALUE -= account(other).VALUE
         else:
             raise ValueError
+
+    def __imul__(self, other):
+        if self.VALUE*account(other).VALUE >= 0:
+            self.VALUE *= account(other).VALUE
+        else:
+            raise ValueError
     __radd__, __rsub__, __rmul__ = __add__, __sub__, __mul__
 
 
