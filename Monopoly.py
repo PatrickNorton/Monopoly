@@ -23,6 +23,9 @@ class account:
     def __sub__(self, other):
         return account(self.VALUE-account(other).VALUE)
 
+    def __mul__(self, other):
+        return account(self.VALUE*account(other).VALUE)
+
     def __iadd__(self, other):
         if self.VALUE+account(other).VALUE >= 0:
             self.VALUE += account(other).VALUE
@@ -34,8 +37,7 @@ class account:
             self.VALUE -= account(other).VALUE
         else:
             raise ValueError
-    __radd__ = __add__
-    __rsub__ = __sub__
+    __radd__, __rsub__, __rmul__ = __add__, __sub__, __mul__
 
 
 class cards:
