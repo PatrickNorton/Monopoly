@@ -7,11 +7,15 @@ import webbrowser
 class account:
     def __init__(self, value):
         if isinstance(value, int):
-            self.VALUE = value
+            var = value
         elif isinstance(value, account):
-            self.VALUE = value.VALUE
+            var = value.VALUE
         else:
             raise TypeError
+        if var >= 0:
+            self.VALUE = var
+        else:
+            raise ValueError
 
     def __int__(self): return self.VALUE
 
