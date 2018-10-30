@@ -4,6 +4,34 @@ from mod import Mod
 import webbrowser
 
 
+class account:
+    def __init__(self, value):
+        if isinstance(value,int):
+            self.VALUE = value
+        elif isinstance(value,account):
+            self.VALUE = value.VALUE
+        else:
+            raise TypeError
+    def __int__(self):
+        return self.VALUE
+    def __str__(self):
+        return str(self.VALUE)
+    def __add__(self,other):
+        return account(self.VALUE+account(other).VALUE)
+    def __sub__(self,other):
+        return account(self.VALUE-account(other).VALUE)
+    def __iadd__(self,other):
+        if self.VALUE+account(other).VALUE >= 0:
+            self.VALUE += account(other).VALUE
+        else:
+            raise ValueError
+    def __isub__(self,other):
+        if self.VALUE-account(other).VALUE >= 0:
+            self.VALUE -= account(other).VALUE
+        else:
+            raise ValueError
+    __radd__ = __add__
+    __rsub__ = __sub__
 class cards:
     def __init__(self, text):
         textlist = text.split(',')
