@@ -71,7 +71,7 @@ class player:
 
     def __init__(self, name):
         self.NAME = name
-        self.bank = 1500
+        self.bank = account(1500)
         self.space = Mod(0, 40)
         self.houseno = 0
         self.keptcards = []
