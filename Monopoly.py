@@ -95,10 +95,10 @@ class player:
     def __eq__(self, other): return self.NAME == other.NAME
 
     def send(self, amount, recipient):
-        if self.bank >= amount:
+        try:
             self.bank -= amount
             recipient.bank += amount
-        else:
+        except ValueError:
             print("You can't do that")
 
     def changename(self, newname):
@@ -140,24 +140,30 @@ class prop(space):
                 self.sell(victim)
 
     def sell(self, owner):
-        if owner.bank >= self.COST:
+        try:
+            owner.bank -= self.COST
             self.owner = owner
             owner.owned.append(self)
-            owner.bank -= self.COST
-        else:
+        except ValueError:
             print("You can't do that")
 
     def addhouse(self):
-        self.owner.bank -= self.HOUSECOST
-        self.houses += 1
-        self.owner.houses += 1
-        if self.houses == 5:
-            self.owner.houses -= 5
-            self.owner.hotels += 1
+        try:
+            self.owner.bank -= self.HOUSECOST
+            self.houses += 1
+            self.owner.houses += 1
+            if self.houses == 5:
+                self.owner.houses -= 5
+                self.owner.hotels += 1
+        except ValueError:
+            print("You can't do that")
 
     def payrent(self, victim):
-        victim.bank -= self.RENT[self.houses]
-        self.owner.bank += self.RENT[self.houses]
+        try:
+            victim.bank -= self.RENT[self.houses]
+            self.owner.bank += self.RENT[self.houses]
+        except ValueError:
+            pass # TODO: Add ran-out-of-money function
 
     def mortgage(self):
         if not self.mortgaged:
@@ -166,8 +172,11 @@ class prop(space):
 
     def unmortgage(self):
         if self.mortgaged:
-            self.owner.bank += self.MORTGAGE
-            self.mortgaged = False
+            try:
+                self.owner.bank -= self.MORTGAGE
+                self.mortgaged = False
+            except ValueError:
+                print("You can't do that")
 
     def color(self):
         if self.COLOR is not None:
@@ -190,8 +199,11 @@ class utility(prop):
             paidvar = 4
         die1, die2 = randint(1, 6), randint(1, 6)
         rent = paidvar*sum(die1, die2)
-        victim.bank -= rent
-        self.owner.bank += rent
+        try:
+            victim.bank -= rent
+            self.owner.bank += rent
+        except ValueError:
+            pass # TODO: Same no-$ fn
 
 
 class railroad(prop):
@@ -209,8 +221,11 @@ class railroad(prop):
             if type(x) == railroad and x != self:
                 rrcounter += 1
         rent = self.RENT[rrcounter]
-        victim.bank -= rent
-        self.owner.bank += rent
+        try:
+            victim.bank -= rent
+            self.owner.bank += rent
+        except ValueError:
+            pass # TODO: No-$ fn
 
 
 class nonproperty(space):
@@ -260,16 +275,25 @@ class drawspace(nonproperty):
         super().land(victim)
         card = cardlist[0]
         if card.HOUSECH is not None:
-            victim.bank -= card.REWARD*victim.houses
-            victim.bank -= card.HOUSECH*victim.hotels
+            try:
+                victim.bank -= card.REWARD*victim.houses
+                victim.bank -= card.HOUSECH*victim.hotels
+            except ValueError:
+                pass # TODO: No-$ fn
         elif card.REWARD is not None:
             if card.FROMOTHERS:
                 for player in victlist:
                     if player != victim:
-                        player.bank -= card.REWARD
-                        victim.bank += card.REWARD
+                        try:
+                            player.bank -= card.REWARD
+                            victim.bank += card.REWARD
+                        except ValueError:
+                            pass # TODO: No-$ fn
             else:
-                victim.bank += card.REWARD
+                try:
+                    victim.bank += card.REWARD
+                except ValueError:
+                    pass # TODO: No-$ fn
         elif card.MOVE is not None:
             global moveto
             if moveto >= 0:
@@ -324,7 +348,10 @@ class luxurytax(nonproperty):
 
     def land(self, victim):
         super().land(victim)
-        victim.bank -= 75
+        try:
+            victim.bank -= 75
+        except ValueError:
+            pass # TODO: No-$ fn
 
 
 class board:
