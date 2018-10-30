@@ -13,11 +13,9 @@ class account:
         else:
             raise TypeError
 
-    def __int__(self):
-        return self.VALUE
+    def __int__(self): return self.VALUE
 
-    def __str__(self):
-        return str(self.VALUE)
+    def __str__(self): return str(self.VALUE)
 
     def __add__(self, other):
         return account(self.VALUE+account(other).VALUE)
