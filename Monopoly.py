@@ -290,19 +290,20 @@ class board:
         self.COLOROPS = {x.SETNM for x in self}
         self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
                         for y in self.COLOROPS}
+        self.SPACELIST = []
+        for x in range(40):
+            if not x % 10:
+                self.SPACELIST.append(self.CORNERS[x//10])
+            else:
+                self.SPACELIST.append(self.SIDES[x//10][x%10-1])
 
     def __getitem__(self, index):
         if index.isdigit():
-            if not index % 10:
-                return self.CORNERS[index/10]
-            else:
-                row = index//10
-                space = index % 10 - 1
-                return self.SIDES[row][space]
+            return self.SPACELIST[index]
         else:
             return self.SPACEDICT[index]
 
-    def __iter__(self): yield from [self[x] for x in range(40)]
+    def __iter__(self): yield from self.SPACELIST
 
     def turnbyturn(self):
         game = True
