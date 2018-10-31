@@ -58,6 +58,10 @@ class account:
         return self.VALUE == account(other).VALUE
     __radd__, __rsub__, __rmul__ = __add__, __sub__, __mul__
 
+    def transferto(self, other, amt):
+        self -= amt
+        other += amt
+
 
 class cards:
     def __init__(self, text):
