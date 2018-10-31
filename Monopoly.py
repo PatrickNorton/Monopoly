@@ -47,6 +47,15 @@ class account:
             self.VALUE *= account(other).VALUE
         else:
             raise ValueError
+
+    def __gt__(self, other):
+        return self.VALUE > account(other).VALUE
+
+    def  __lt__(self, other):
+        return self.VALUE < account(other).VALUE
+
+    def __eq__(self, other):
+        return self.VALUE == account(other).VALUE
     __radd__, __rsub__, __rmul__ = __add__, __sub__, __mul__
 
 
