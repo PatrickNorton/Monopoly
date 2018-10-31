@@ -1,4 +1,5 @@
 # TODO: Doubling rent when all of a color owned, negative money dealings-with
+# Fns which should be enclosed in "try": land
 from random import randint, shuffle
 from mod import Mod
 import webbrowser
@@ -171,10 +172,7 @@ class prop(space):
             print("You can't do that")
 
     def payrent(self, victim):
-        try:
-            victim.send(self.owner, self.RENT[self.houses])
-        except ValueError:
-            pass  # TODO: Add ran-out-of-money function
+        victim.send(self.owner, self.RENT[self.houses])
 
     def mortgage(self):
         if not self.mortgaged:
@@ -221,10 +219,7 @@ class utility(prop):
             paidvar = 4
         die1, die2 = randint(1, 6), randint(1, 6)
         rent = paidvar*sum(die1, die2)
-        try:
-            victim.send(self.owner, rent)
-        except ValueError:
-            pass  # TODO: Same no-$ fn
+        victim.send(self.owner, rent)
 
 
 class railroad(prop):
@@ -242,10 +237,7 @@ class railroad(prop):
             if type(x) == railroad and x != self:
                 rrcounter += 1
         rent = self.RENT[rrcounter]
-        try:
-            victim.send(self.owner, rent)
-        except ValueError:
-            pass  # TODO: No-$ fn
+        victim.send(self.owner, rent)
 
 
 class nonproperty(space):
@@ -295,24 +287,15 @@ class drawspace(nonproperty):
         super().land(victim)
         card = cardlist[0]
         if card.HOUSECH is not None:
-            try:
-                victim.bank -= card.REWARD*victim.houses
-                victim.bank -= card.HOUSECH*victim.hotels
-            except ValueError:
-                pass  # TODO: No-$ fn
+            victim.bank -= card.REWARD*victim.houses
+            victim.bank -= card.HOUSECH*victim.hotels
         elif card.REWARD is not None:
             if card.FROMOTHERS:
                 for player in victlist:
                     if player != victim:
-                        try:
-                            player.send(victim, card.REWARD)
-                        except ValueError:
-                            pass  # TODO: No-$ fn
+                        player.send(victim, card.REWARD)
             else:
-                try:
-                    victim.bank += card.REWARD
-                except ValueError:
-                    pass  # TODO: No-$ fn
+                victim.bank += card.REWARD
         elif card.MOVE is not None:
             global moveto
             if moveto >= 0:
@@ -367,10 +350,7 @@ class luxurytax(nonproperty):
 
     def land(self, victim):
         super().land(victim)
-        try:
-            victim.bank -= 75
-        except ValueError:
-            pass  # TODO: No-$ fn
+        victim.bank -= 75
 
 
 class board:
@@ -468,9 +448,12 @@ class board:
 
     def landing(self, player):
         try:
-            self[player.space].land(player, self.PLAYERS)
-        except TypeError:
-            self[player.space].land(player)
+            try:
+                self[player.space].land(player, self.PLAYERS)
+            except TypeError:
+                self[player.space].land(player)
+        except ValueError:
+            self.outofmoney(player)
 
     def mortgagizer(self, morttype):
         in2 = input('Which property? ')
@@ -496,6 +479,10 @@ class board:
 
     def findcolor(self, color):
         return [x for x in self if x.COLOR == color]
+
+    def outofmoney(self, victim):
+        print("You are out of money")
+    #TODO: Finish transaction after outofmoney function
 
 
 class row:
