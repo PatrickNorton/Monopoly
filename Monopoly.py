@@ -107,10 +107,9 @@ class player:
 
     def __eq__(self, other): return self.NAME == other.NAME
 
-    def send(self, amount, recipient):
+    def send(self, recipient, amount):
         try:
-            self.bank -= amount
-            recipient.bank += amount
+            self.bank.transferto(recipient.bank, amount)
         except ValueError:
             print("You can't do that")
 
@@ -173,8 +172,7 @@ class prop(space):
 
     def payrent(self, victim):
         try:
-            victim.bank -= self.RENT[self.houses]
-            self.owner.bank += self.RENT[self.houses]
+            victim.send(self.owner, self.RENT[self.houses])
         except ValueError:
             pass # TODO: Add ran-out-of-money function
 
@@ -224,8 +222,7 @@ class utility(prop):
         die1, die2 = randint(1, 6), randint(1, 6)
         rent = paidvar*sum(die1, die2)
         try:
-            victim.bank -= rent
-            self.owner.bank += rent
+            victim.send(self.owner, rent)
         except ValueError:
             pass # TODO: Same no-$ fn
 
@@ -246,8 +243,7 @@ class railroad(prop):
                 rrcounter += 1
         rent = self.RENT[rrcounter]
         try:
-            victim.bank -= rent
-            self.owner.bank += rent
+            victim.send(self.owner, rent)
         except ValueError:
             pass # TODO: No-$ fn
 
@@ -309,8 +305,7 @@ class drawspace(nonproperty):
                 for player in victlist:
                     if player != victim:
                         try:
-                            player.bank -= card.REWARD
-                            victim.bank += card.REWARD
+                            player.send(victim, card.REWARD)
                         except ValueError:
                             pass # TODO: No-$ fn
             else:
