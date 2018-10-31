@@ -174,7 +174,7 @@ class prop(space):
         try:
             victim.send(self.owner, self.RENT[self.houses])
         except ValueError:
-            pass # TODO: Add ran-out-of-money function
+            pass  # TODO: Add ran-out-of-money function
 
     def mortgage(self):
         if not self.mortgaged:
@@ -203,8 +203,8 @@ class prop(space):
         if todo == 'mortgage':
             prop = input("Which property do you wish to mortgage? ")
             prop = prop.capwords()
-            if prop in self.owner.owned: # ! Need to fix this to actually return True
-                prop.mortgage() # ! Ditto
+            if prop in self.owner.owned:  # ! Need to fix this to actually return True
+                prop.mortgage()  # ! Ditto
 
 
 class utility(prop):
@@ -224,7 +224,7 @@ class utility(prop):
         try:
             victim.send(self.owner, rent)
         except ValueError:
-            pass # TODO: Same no-$ fn
+            pass  # TODO: Same no-$ fn
 
 
 class railroad(prop):
@@ -245,7 +245,7 @@ class railroad(prop):
         try:
             victim.send(self.owner, rent)
         except ValueError:
-            pass # TODO: No-$ fn
+            pass  # TODO: No-$ fn
 
 
 class nonproperty(space):
@@ -299,7 +299,7 @@ class drawspace(nonproperty):
                 victim.bank -= card.REWARD*victim.houses
                 victim.bank -= card.HOUSECH*victim.hotels
             except ValueError:
-                pass # TODO: No-$ fn
+                pass  # TODO: No-$ fn
         elif card.REWARD is not None:
             if card.FROMOTHERS:
                 for player in victlist:
@@ -307,12 +307,12 @@ class drawspace(nonproperty):
                         try:
                             player.send(victim, card.REWARD)
                         except ValueError:
-                            pass # TODO: No-$ fn
+                            pass  # TODO: No-$ fn
             else:
                 try:
                     victim.bank += card.REWARD
                 except ValueError:
-                    pass # TODO: No-$ fn
+                    pass  # TODO: No-$ fn
         elif card.MOVE is not None:
             global moveto
             if moveto >= 0:
@@ -370,7 +370,7 @@ class luxurytax(nonproperty):
         try:
             victim.bank -= 75
         except ValueError:
-            pass # TODO: No-$ fn
+            pass  # TODO: No-$ fn
 
 
 class board:
