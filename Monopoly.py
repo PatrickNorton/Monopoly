@@ -51,7 +51,7 @@ class account:
     def __gt__(self, other):
         return self.VALUE > account(other).VALUE
 
-    def  __lt__(self, other):
+    def __lt__(self, other):
         return self.VALUE < account(other).VALUE
 
     def __eq__(self, other):
