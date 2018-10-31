@@ -31,20 +31,20 @@ class account:
         return account(self.VALUE*account(other).VALUE)
 
     def __iadd__(self, other):
-        if self.VALUE+account(other).VALUE >= 0:
-            self.VALUE += account(other).VALUE
+        if self+other >= 0:
+            self = self+other
         else:
             raise ValueError
 
     def __isub__(self, other):
-        if self.VALUE-account(other).VALUE >= 0:
-            self.VALUE -= account(other).VALUE
+        if self+other >= 0:
+            self = self-other
         else:
             raise ValueError
 
     def __imul__(self, other):
         if self.VALUE*account(other).VALUE >= 0:
-            self.VALUE *= account(other).VALUE
+            self = self*other
         else:
             raise ValueError
 
