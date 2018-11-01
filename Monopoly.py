@@ -244,6 +244,7 @@ class railroad(prop):
 class nonproperty(space):
     def __init__(self, name):
         super().__init__(None, name)
+        self.SETNM = type(self).__name__
 
     def __eq__(self, other): return type(self) == type(other)
 
