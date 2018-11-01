@@ -84,7 +84,7 @@ class cards:
         data = [txt, rw, fmoth, keep, mv, hch]
         for y, x in enumerate(data):
             if not isinstance(x, str):
-                pass
+                continue
             elif x == 'True':
                 data[y] = True
             elif x == 'False':
