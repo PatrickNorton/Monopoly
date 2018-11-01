@@ -501,6 +501,7 @@ class board:
         if soldvar in self.PLAYERS:
             affirm = input(f"{self.PLAYERDICT[soldvar]}, do you affirm? ")
             if affirm.lower().startswith('y'):
+                pass
 
 
 class row:
