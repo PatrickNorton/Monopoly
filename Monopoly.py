@@ -80,7 +80,7 @@ class cards:
             self.HOUSECH
         ) = data
 
-    def txttodata(self, txt, rw, fmoth, keep, mv, hch=None):
+    def txttodata(self, txt, rw, fmoth, keep, mv, hch='None'):
         data = [txt, rw, fmoth, keep, mv, hch]
         for y, x in enumerate(data):
             if x == 'True':
@@ -89,7 +89,7 @@ class cards:
                 data[y] = False
             elif x == 'None':
                 data[y] = None
-            elif x[1:].isdigit():
+            elif x[1:].isdigit() or x.isdigit():
                 data[y] = int(x)
         return data
 
@@ -563,3 +563,4 @@ class row:
             magicint = magiclist.index(text[0][1:])
             magiclist = [railroad, utility]
             return magiclist[magicint](text[1])
+board()
