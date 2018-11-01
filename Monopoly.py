@@ -112,7 +112,7 @@ class player:
 
     def send(self, recipient, amount):
         try:
-            self.bank.transferto(recipient.bank, amount)
+        self.bank.transferto(recipient.bank, amount)
         except ValueError:
             print("You can't do that")
 
