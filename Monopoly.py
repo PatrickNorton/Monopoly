@@ -392,9 +392,9 @@ class board:
                 pass
                 # TODO: Trades
             elif actions == 'mortgage':
-                self.mortgagizer(1)
+                self.mortgagizer(True)
             elif actions == 'demortgage':
-                self.mortgagizer(0)
+                self.mortgagizer(False)
             elif actions == 'help':
                 site = "https://en.wikibooks.org/wiki/Monopoly/Official_Rules"
                 webbrowser.open(site)
@@ -456,11 +456,12 @@ class board:
         except ValueError:
             self.outofmoney(player)
 
-    def mortgagizer(self, morttype):
+    def mortgagizer(self, morttype=True, player=None):
+        player = self.current if player is None else player
         in2 = input('Which property? ')
         in2 = in2.capwords()
         if in2 in self:
-            if self[in2] in self.current.owned:
+            if self[in2] in player.owned:
                 if morttype:
                     self[in2].mortgage()
                 else:
