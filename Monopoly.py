@@ -358,6 +358,7 @@ class board:
         self.SIDES = [row(x) for x in range(4)]
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
+        self.PLAYERDICT = {x.NAME: x for x in self.PLAYERS}
         self.SPACEDICT = {x.NAME: x for x in self}
         self.COLOROPS = {x.SETNM for x in self}
         self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
