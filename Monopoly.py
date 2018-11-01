@@ -484,7 +484,23 @@ class board:
 
     def outofmoney(self, victim):
         print("You are out of money")
+        invar = input("What do you wish to do? ")
+        if invar == 'mortgage':
+            self.mortgagizer(True)
+        elif invar == 'sell':
+            self.sellaprop(victim)
     #TODO: Finish transaction after outofmoney function
+
+    def sellaprop(self, seller):
+        space = input("Which property do you wish to sell? ")
+        space = space.capwords()
+        if space in self.SPACEDICT:
+            space = self.SPACEDOCT[space]
+        soldvar = input("To whom do you wish to sell the property? ")
+        soldvar = soldvar.lower()
+        if soldvar in self.PLAYERS:
+            affirm = input(f"{self.PLAYERDICT[soldvar]}, do you affirm? ")
+            if affirm.lower().startswith('y'):
 
 
 class row:
