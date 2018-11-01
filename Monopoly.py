@@ -566,4 +566,3 @@ class row:
             magicint = magiclist.index(text[0][1:])
             magiclist = [railroad, utility]
             return magiclist[magicint](text[1])
-board()
