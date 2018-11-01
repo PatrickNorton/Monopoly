@@ -111,10 +111,7 @@ class player:
     def __eq__(self, other): return self.NAME == other.NAME
 
     def send(self, recipient, amount):
-        try:
         self.bank.transferto(recipient.bank, amount)
-        except ValueError:
-            print("You can't do that")
 
     def changename(self, newname):
         self.NAME = newname
