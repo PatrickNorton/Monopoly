@@ -80,10 +80,12 @@ class cards:
             self.HOUSECH
         ) = data
 
-    def txttodata(self, txt, rw, fmoth, keep, mv, hch='None'):
+    def txttodata(self, txt, rw, fmoth, keep, mv, hch=None):
         data = [txt, rw, fmoth, keep, mv, hch]
         for y, x in enumerate(data):
-            if x == 'True':
+            if not isinstance(x, str):
+                pass
+            elif x == 'True':
                 data[y] = True
             elif x == 'False':
                 data[y] = False
