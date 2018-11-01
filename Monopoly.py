@@ -360,16 +360,16 @@ class board:
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
         self.PLAYERDICT = {x.NAME: x for x in self.PLAYERS}
-        self.SPACEDICT = {x.NAME: x for x in self}
-        self.COLOROPS = {x.SETNM for x in self}
-        self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
-                        for y in self.COLOROPS}
         self.SPACELIST = []
         for x in range(40):
             if not x % 10:
                 self.SPACELIST.append(self.CORNERS[x//10])
             else:
                 self.SPACELIST.append(self.SIDES[x//10][x % 10-1])
+        self.SPACEDICT = {x.NAME: x for x in self}
+        self.COLOROPS = {x.SETNM for x in self}
+        self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
+                        for y in self.COLOROPS}
 
     def __getitem__(self, index):
         if index.isdigit():
