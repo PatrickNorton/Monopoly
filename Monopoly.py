@@ -91,7 +91,7 @@ class cards:
                 data[y] = False
             elif x == 'None':
                 data[y] = None
-            elif x[1:].isdigit() or x.isdigit():
+            elif x.isgigit() or x[1:].isdigit():
                 data[y] = int(x)
         return data
 
