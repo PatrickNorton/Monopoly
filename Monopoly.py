@@ -194,18 +194,6 @@ class prop(space):
         else:
             return type(self).__name__
 
-    def cashless(self, victim, RENT=None):
-        if RENT is None:
-            RENT = self.RENT
-        print("You are out of money!")
-        todo = input("What do you want to do? ").lower()
-        if todo == 'mortgage':
-            prop = input("Which property do you wish to mortgage? ")
-            prop = prop.capwords()
-            if prop in self.owner.owned:  # ! Need to fix this to actually return True
-                prop.mortgage()  # ! Ditto
-
-
 class utility(prop):
     def __init__(self, name):
         super().__init__('Utility', name, 150, None, 4, 10)
