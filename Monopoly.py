@@ -494,14 +494,25 @@ class board:
     def sellaprop(self, seller):
         space = input("Which property do you wish to sell? ")
         space = space.capwords()
-        if space in self.SPACEDICT:
-            space = self.SPACEDOCT[space]
+        if space in self.SPACEDICT and space in seller.owned:
+            space = self.SPACEDICT[space]
         soldvar = input("To whom do you wish to sell the property? ")
         soldvar = soldvar.lower()
         if soldvar in self.PLAYERS:
-            affirm = input(f"{self.PLAYERDICT[soldvar]}, do you affirm? ")
+            soldto = self.PLAYERDICT[soldvar]
+            affirm = input(f"{soldvar}, do you affirm? ")
             if affirm.lower().startswith('y'):
-                pass
+                self.tradeprop(seller, soldto, space)
+
+    def tradeprop(self, seller, soldto, soldspace, price=None):
+        if price == None: price = soldspace.COST
+        try:
+            soldto.send(seller, price)
+        except ValueError:
+            self.outofmoney(soldto)
+        seller.owned.remove(soldspace)
+        soldspace.owner = soldto
+        soldto.owned.append(soldspace)
 
 
 class row:
