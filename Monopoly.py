@@ -243,7 +243,7 @@ class railroad(prop):
 
 class nonproperty(space):
     def __init__(self, name):
-        super().__init__(None, name, None, None, None)
+        super().__init__(None, name)
 
     def __eq__(self, other): return type(self) == type(other)
 
