@@ -488,7 +488,7 @@ class board:
             self.mortgagizer(True)
         elif invar == 'sell':
             self.sellaprop(victim)
-    #TODO: Finish transaction after outofmoney function
+    # TODO: Finish transaction after outofmoney function
 
     def sellaprop(self, seller):
         space = input("Which property do you wish to sell? ")
@@ -504,7 +504,8 @@ class board:
                 self.tradeprop(seller, soldto, space)
 
     def tradeprop(self, seller, soldto, soldspace, price=None):
-        if price == None: price = soldspace.COST
+        if price == None:
+            price = soldspace.COST
         try:
             soldto.send(seller, price)
         except ValueError:
