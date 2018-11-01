@@ -444,7 +444,7 @@ class board:
             except TypeError:
                 self[player.space].land(player)
         except ValueError:
-            self.outofmoney(player)
+            self.outofmoney(player, self[player.space].RENT)
 
     def mortgagizer(self, morttype=True, player=None):
         player = self.current if player is None else player
@@ -472,7 +472,7 @@ class board:
     def findcolor(self, color):
         return [x for x in self if x.COLOR == color]
 
-    def outofmoney(self, victim):
+    def outofmoney(self, victim, amount):
         print("You are out of money")
         invar = input("What do you wish to do? ")
         if invar == 'mortgage':
@@ -500,7 +500,7 @@ class board:
         try:
             soldto.send(seller, price)
         except ValueError:
-            self.outofmoney(soldto)
+            self.outofmoney(soldto, price)
             soldto.send(seller, price)
         seller.owned.remove(soldspace)
         soldspace.owner = soldto
