@@ -1,7 +1,69 @@
-# TODO: Loans, negative money dealings-with
+
+# TODO: Doubling rent when all of a color owned, negative money dealings-with
+# Fns which should be enclosed in "try": land
+# TODO: Fix 'land' function to finish up even if player has no $
 from random import randint, shuffle
 from mod import Mod
 import webbrowser
+
+
+class account:
+    def __init__(self, value):
+        if isinstance(value, int):
+            var = value
+        elif isinstance(value, account):
+            var = value.VALUE
+        else:
+            raise TypeError
+        if var >= 0:
+            self.VALUE = var
+        else:
+            raise ValueError
+
+    def __int__(self): return self.VALUE
+
+    def __str__(self): return str(self.VALUE)
+
+    def __add__(self, other):
+        return account(self.VALUE+account(other).VALUE)
+
+    def __sub__(self, other):
+        return account(self.VALUE-account(other).VALUE)
+
+    def __mul__(self, other):
+        return account(self.VALUE*account(other).VALUE)
+
+    def __iadd__(self, other):
+        if self+other >= 0:
+            return self+other
+        else:
+            raise ValueError
+
+    def __isub__(self, other):
+        if self+other >= 0:
+            return self-other
+        else:
+            raise ValueError
+
+    def __imul__(self, other):
+        if self.VALUE*account(other).VALUE >= 0:
+            return self*other
+        else:
+            raise ValueError
+
+    def __gt__(self, other):
+        return self.VALUE > account(other).VALUE
+
+    def __lt__(self, other):
+        return self.VALUE < account(other).VALUE
+
+    def __eq__(self, other):
+        return self.VALUE == account(other).VALUE
+    __radd__, __rsub__, __rmul__ = __add__, __sub__, __mul__
+
+    def transferto(self, other, amt):
+        self -= amt
+        other += amt
 
 
 class cards:
@@ -21,13 +83,15 @@ class cards:
     def txttodata(self, txt, rw, fmoth, keep, mv, hch=None):
         data = [txt, rw, fmoth, keep, mv, hch]
         for y, x in enumerate(data):
-            if x == 'True':
+            if not isinstance(x, str):
+                continue
+            elif x == 'True':
                 data[y] = True
             elif x == 'False':
                 data[y] = False
             elif x == 'None':
                 data[y] = None
-            elif x[1:].isdigit():
+            elif x.isdigit() or x[1:].isdigit():
                 data[y] = int(x)
         return data
 
@@ -37,7 +101,7 @@ class player:
 
     def __init__(self, name):
         self.NAME = name
-        self.bank = 1500
+        self.bank = account(1500)
         self.space = Mod(0, 40)
         self.houseno = 0
         self.keptcards = []
@@ -48,12 +112,8 @@ class player:
 
     def __eq__(self, other): return self.NAME == other.NAME
 
-    def send(self, amount, recipient):
-        if self.bank >= amount:
-            self.bank -= amount
-            recipient.bank += amount
-        else:
-            print("You can't do that")
+    def send(self, recipient, amount):
+        self.bank.transferto(recipient.bank, amount)
 
     def changename(self, newname):
         self.NAME = newname
@@ -61,26 +121,31 @@ class player:
 
 
 class space:
-    def __init__(self, color, name, cost, housecost, *rent):
+    def __init__(self, color, name):
         self.COLOR = color
         self.NAME = name
+        self.occupants = []
+
+    def __eq__(self, other): return self.NAME == other.NAME
+
+    def land(self, victim): self.occupants.append(victim)
+
+
+class prop(space):
+    def __init__(self, color, name, cost, housecost, *rent):
+        super().__init__(color, name)
         self.COST = cost
         self.RENT = rent
         self.HOUSECOST = housecost
+        self.MORTGAGE = cost//2
+        self.SETNM = color
         self.owner = None
         self.houses = 0
         self.hotels = 0
         self.mortgaged = False
-        self.occupants = []
-        if cost is not None:
-            self.MORTGAGE = cost//2
-        else:
-            self.MORTGAGE = None
-        self.SETNM = self.color()
-
-    def __eq__(self, other): return self.NAME == other.NAME
 
     def land(self, victim):
+        super().land(victim)
         if self.owner and victim != self.owner and not self.mortgaged:
             self.payrent(victim)
         elif not self.owner:
@@ -89,24 +154,26 @@ class space:
                 self.sell(victim)
 
     def sell(self, owner):
-        if owner.bank >= self.COST:
+        try:
+            owner.bank -= self.COST
             self.owner = owner
             owner.owned.append(self)
-            owner.bank -= self.COST
-        else:
+        except ValueError:
             print("You can't do that")
 
     def addhouse(self):
-        self.owner.bank -= self.HOUSECOST
-        self.houses += 1
-        self.owner.houses += 1
-        if self.houses == 5:
-            self.owner.houses -= 5
-            self.owner.hotels += 1
+        try:
+            self.owner.bank -= self.HOUSECOST
+            self.houses += 1
+            self.owner.houses += 1
+            if self.houses == 5:
+                self.owner.houses -= 5
+                self.owner.hotels += 1
+        except ValueError:
+            print("You can't do that")
 
     def payrent(self, victim):
-        victim.bank -= self.RENT[self.houses]
-        self.owner.bank += self.RENT[self.houses]
+        victim.send(self.owner, self.RENT[self.houses])
 
     def mortgage(self):
         if not self.mortgaged:
@@ -115,8 +182,11 @@ class space:
 
     def unmortgage(self):
         if self.mortgaged:
-            self.owner.bank += self.MORTGAGE
-            self.mortgaged = False
+            try:
+                self.owner.bank -= self.MORTGAGE
+                self.mortgaged = False
+            except ValueError:
+                print("You can't do that")
 
     def color(self):
         if self.COLOR is not None:
@@ -124,15 +194,23 @@ class space:
         else:
             return type(self).__name__
 
+    def cashless(self, victim, RENT=None):
+        if RENT is None:
+            RENT = self.RENT
+        print("You are out of money!")
+        todo = input("What do you want to do? ").lower()
+        if todo == 'mortgage':
+            prop = input("Which property do you wish to mortgage? ")
+            prop = prop.capwords()
+            if prop in self.owner.owned:  # ! Need to fix this to actually return True
+                prop.mortgage()  # ! Ditto
 
-class utility(space):
+
+class utility(prop):
     def __init__(self, name):
         super().__init__('Utility', name, 150, None, 4, 10)
 
-    def land(self, victim):
-        super().land(victim)
-
-    def addhouse(self): raise NotImplementedError
+    def addhouse(self): raise AttributeError
 
     def payrent(self, victim):
         utillist = (utility('Electric Company'), utility('Water Works'))
@@ -142,18 +220,17 @@ class utility(space):
             paidvar = 4
         die1, die2 = randint(1, 6), randint(1, 6)
         rent = paidvar*sum(die1, die2)
-        victim.bank -= rent
-        self.owner.bank += rent
+        victim.send(self.owner, rent)
 
 
-class railroad(space):
+class railroad(prop):
     def __init__(self, name):
         super().__init__('Railroad', name, 200, None, 25, 50, 100, 200)
 
     def land(self, victim):
         super().land(victim)
 
-    def addhouse(self): raise NotImplementedError
+    def addhouse(self): raise AttributeError
 
     def payrent(self, victim):
         rrcounter = 0
@@ -161,23 +238,15 @@ class railroad(space):
             if type(x) == railroad and x != self:
                 rrcounter += 1
         rent = self.RENT[rrcounter]
-        victim.bank -= rent
-        self.owner.bank += rent
+        victim.send(self.owner, rent)
 
 
 class nonproperty(space):
     def __init__(self, name):
-        super().__init__(None, name, None, None, None)
+        super().__init__(None, name)
+        self.SETNM = type(self).__name__
 
     def __eq__(self, other): return type(self) == type(other)
-
-    def land(self, victim): self.occupants.append(victim)
-
-    def sell(self, owner): raise NotImplementedError
-
-    def addhouse(self): raise NotImplementedError
-
-    def payrent(self, victim): raise NotImplementedError
 
 
 class gotojail(nonproperty):
@@ -226,8 +295,7 @@ class drawspace(nonproperty):
             if card.FROMOTHERS:
                 for player in victlist:
                     if player != victim:
-                        player.bank -= card.REWARD
-                        victim.bank += card.REWARD
+                        player.send(victim, card.REWARD)
             else:
                 victim.bank += card.REWARD
         elif card.MOVE is not None:
@@ -292,6 +360,13 @@ class board:
         self.SIDES = [row(x) for x in range(4)]
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
+        self.PLAYERDICT = {x.NAME: x for x in self.PLAYERS}
+        self.SPACELIST = []
+        for x in range(40):
+            if not x % 10:
+                self.SPACELIST.append(self.CORNERS[x//10])
+            else:
+                self.SPACELIST.append(self.SIDES[x//10][x % 10-1])
         self.SPACEDICT = {x.NAME: x for x in self}
         self.COLOROPS = {x.SETNM for x in self}
         self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
@@ -299,17 +374,11 @@ class board:
 
     def __getitem__(self, index):
         if index.isdigit():
-            if not index % 10:
-                return self.CORNERS[index/10]
-            else:
-                row = index//10
-                space = index % 10 - 1
-                return self.SIDES[row][space]
+            return self.SPACELIST[index]
         else:
             return self.SPACEDICT[index]
 
-    def __iter__(self):
-        yield from [self[x] for x in range(40)]
+    def __iter__(self): yield from self.SPACELIST
 
     def turnbyturn(self):
         game = True
@@ -325,9 +394,9 @@ class board:
                 pass
                 # TODO: Trades
             elif actions == 'mortgage':
-                self.mortgagizer(1)
+                self.mortgagizer(True)
             elif actions == 'demortgage':
-                self.mortgagizer(0)
+                self.mortgagizer(False)
             elif actions == 'help':
                 site = "https://en.wikibooks.org/wiki/Monopoly/Official_Rules"
                 webbrowser.open(site)
@@ -382,15 +451,19 @@ class board:
 
     def landing(self, player):
         try:
-            self[player.space].land(player, self.PLAYERS)
-        except TypeError:
-            self[player.space].land(player)
+            try:
+                self[player.space].land(player, self.PLAYERS)
+            except TypeError:
+                self[player.space].land(player)
+        except ValueError:
+            self.outofmoney(player)
 
-    def mortgagizer(self, morttype):
+    def mortgagizer(self, morttype=True, player=None):
+        player = self.current if player is None else player
         in2 = input('Which property? ')
         in2 = in2.capwords()
         if in2 in self:
-            if self[in2] in self.current.owned:
+            if self[in2] in player.owned:
                 if morttype:
                     self[in2].mortgage()
                 else:
@@ -411,6 +484,40 @@ class board:
     def findcolor(self, color):
         return [x for x in self if x.COLOR == color]
 
+    def outofmoney(self, victim):
+        print("You are out of money")
+        invar = input("What do you wish to do? ")
+        if invar == 'mortgage':
+            self.mortgagizer(True)
+        elif invar == 'sell':
+            self.sellaprop(victim)
+    # TODO: Finish transaction after outofmoney function
+
+    def sellaprop(self, seller):
+        space = input("Which property do you wish to sell? ")
+        space = space.capwords()
+        if space in self.SPACEDICT and space in seller.owned:
+            space = self.SPACEDICT[space]
+        soldvar = input("To whom do you wish to sell the property? ")
+        soldvar = soldvar.lower()
+        if soldvar in self.PLAYERS:
+            soldto = self.PLAYERDICT[soldvar]
+            affirm = input(f"{soldvar}, do you affirm? ")
+            if affirm.lower().startswith('y'):
+                self.tradeprop(seller, soldto, space)
+
+    def tradeprop(self, seller, soldto, soldspace, price=None):
+        if price == None:
+            price = soldspace.COST
+        try:
+            soldto.send(seller, price)
+        except ValueError:
+            self.outofmoney(soldto)
+            soldto.send(seller, price)
+        seller.owned.remove(soldspace)
+        soldspace.owner = soldto
+        soldto.owned.append(soldspace)
+
 
 class row:
     def __init__(self, number):
@@ -422,6 +529,8 @@ class row:
             print(self.SPACES)
 
     def __getitem__(self, index): return self.SPACES[index]
+
+    def __iter__(self): yield from self.SPACES
 
     def txttopiece(self, data, number):
         reading = False
@@ -443,7 +552,7 @@ class row:
                     else:
                         tospace[num] = y
                 else:
-                    self.SPACES.append(space(*tospace))
+                    self.SPACES.append(prop(*tospace))
 
     def nonprop(self, text):
         text = [x.strip() for x in text]
