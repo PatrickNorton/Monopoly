@@ -139,6 +139,7 @@ class prop(space):
         self.HOUSECOST = housecost
         self.MORTGAGE = cost//2
         self.SETNM = color
+        self.CURRENTRENT = rent[0]
         self.owner = None
         self.houses = 0
         self.hotels = 0
@@ -207,8 +208,8 @@ class utility(prop):
         else:
             paidvar = 4
         die1, die2 = randint(1, 6), randint(1, 6)
-        rent = paidvar*sum(die1, die2)
-        victim.send(self.owner, rent)
+        self.CURRENTRENT = paidvar*sum(die1, die2)
+        victim.send(self.owner, self.CURRENTRENT)
 
 
 class railroad(prop):
@@ -225,8 +226,8 @@ class railroad(prop):
         for x in self.owner.owned:
             if type(x) == railroad and x != self:
                 rrcounter += 1
-        rent = self.RENT[rrcounter]
-        victim.send(self.owner, rent)
+        self.CURRENTRENT = self.RENT[rrcounter]
+        victim.send(self.owner, self.CURRENTRENT)
 
 
 class nonproperty(space):
@@ -444,7 +445,7 @@ class board:
             except TypeError:
                 self[player.space].land(player)
         except ValueError:
-            self.outofmoney(player, self[player.space].RENT)
+            self.outofmoney(player, self[player.space].CURRENTRENT)
 
     def mortgagizer(self, morttype=True, player=None):
         player = self.current if player is None else player
