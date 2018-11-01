@@ -358,6 +358,7 @@ class board:
         self.SIDES = [row(x) for x in range(4)]
         self.CORNERS = [go(), jail(), freepark(), gotojail()]
         self.PLAYERS = self.playerinit()
+        self.PLAYERDICT = {x.NAME: x for x in self.PLAYERS}
         self.SPACEDICT = {x.NAME: x for x in self}
         self.COLOROPS = {x.SETNM for x in self}
         self.SPBYCLR = {y: [x for x in self if x.SETNM == y]
@@ -391,9 +392,9 @@ class board:
                 pass
                 # TODO: Trades
             elif actions == 'mortgage':
-                self.mortgagizer(1)
+                self.mortgagizer(True)
             elif actions == 'demortgage':
-                self.mortgagizer(0)
+                self.mortgagizer(False)
             elif actions == 'help':
                 site = "https://en.wikibooks.org/wiki/Monopoly/Official_Rules"
                 webbrowser.open(site)
@@ -455,11 +456,12 @@ class board:
         except ValueError:
             self.outofmoney(player)
 
-    def mortgagizer(self, morttype):
+    def mortgagizer(self, morttype=True, player=None):
+        player = self.current if player is None else player
         in2 = input('Which property? ')
         in2 = in2.capwords()
         if in2 in self:
-            if self[in2] in self.current.owned:
+            if self[in2] in player.owned:
                 if morttype:
                     self[in2].mortgage()
                 else:
@@ -482,7 +484,35 @@ class board:
 
     def outofmoney(self, victim):
         print("You are out of money")
+        invar = input("What do you wish to do? ")
+        if invar == 'mortgage':
+            self.mortgagizer(True)
+        elif invar == 'sell':
+            self.sellaprop(victim)
     #TODO: Finish transaction after outofmoney function
+
+    def sellaprop(self, seller):
+        space = input("Which property do you wish to sell? ")
+        space = space.capwords()
+        if space in self.SPACEDICT and space in seller.owned:
+            space = self.SPACEDICT[space]
+        soldvar = input("To whom do you wish to sell the property? ")
+        soldvar = soldvar.lower()
+        if soldvar in self.PLAYERS:
+            soldto = self.PLAYERDICT[soldvar]
+            affirm = input(f"{soldvar}, do you affirm? ")
+            if affirm.lower().startswith('y'):
+                self.tradeprop(seller, soldto, space)
+
+    def tradeprop(self, seller, soldto, soldspace, price=None):
+        if price == None: price = soldspace.COST
+        try:
+            soldto.send(seller, price)
+        except ValueError:
+            self.outofmoney(soldto)
+        seller.owned.remove(soldspace)
+        soldspace.owner = soldto
+        soldto.owned.append(soldspace)
 
 
 class row:
