@@ -4,6 +4,7 @@
 # TODO: Fix 'land' function to finish up even if player has no $
 from random import randint, shuffle
 from mod import Mod
+from copy import copy
 import webbrowser
 
 
@@ -274,27 +275,30 @@ class drawspace(nonproperty):
     def __init__(self, name):
         super().__init__(name)
 
-    def land(self, victim, victlist, cardlist):
+    def land(self, victim, victlist, cardlist, card=None):
         super().land(victim)
-        card = cardlist[0]
+        if card is None:
+            card = cardlist.pop(0)
         if card.HOUSECH is not None:
             victim.bank -= card.REWARD*victim.houses
             victim.bank -= card.HOUSECH*victim.hotels
-        elif card.REWARD is not None:
+        if card.REWARD is not None:
             if card.FROMOTHERS:
                 for player in victlist:
                     if player != victim:
                         player.send(victim, card.REWARD)
             else:
                 victim.bank += card.REWARD
-        elif card.MOVE is not None:
+        if card.MOVE is not None:
             global moveto
             if moveto >= 0:
                 moveto = card.MOVE
             else:
                 moveto = victim.space = card.MOVE
-        elif card.KEEP:
+        if card.KEEP:
             victim.keptcards.append(card)
+        else:
+            cardlist.append(copy(card))
 
 
 class commchest(drawspace):
