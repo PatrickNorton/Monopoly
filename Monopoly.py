@@ -448,13 +448,14 @@ class board:
         return playerlist
 
     def landing(self, player):
+        currspace = self[player.space]
         try:
             try:
-                self[player.space].land(player, self.PLAYERS)
+                currspace.land(player, self.PLAYERS)
             except TypeError:
-                self[player.space].land(player)
+                currspace.land(player)
         except ValueError:
-            self.outofmoney(player, self[player.space].CURRENTRENT)
+            self.outofmoney(player, currspace.CURRENTRENT, currspace.OWNER)
 
     def mortgagizer(self, morttype=True, player=None):
         player = self.current if player is None else player
@@ -482,7 +483,7 @@ class board:
     def findcolor(self, color):
         return [x for x in self if x.COLOR == color]
 
-    def outofmoney(self, victim, amount):
+    def outofmoney(self, victim, amount, owedplayer):
         print("You are out of money")
         while victim.bank < amount:
             invar = input("What do you wish to do? ")
@@ -490,11 +491,10 @@ class board:
                 self.mortgagizer(True)
             elif invar == 'sell':
                 self.sellaprop(victim)
-        if self[victim.current].owner is None:
+        if owedplayer is None:
             victim -= amount
         else:
-            victim.send(self[victim.current].owner, amount)
-    # TODO: Finish transaction after outofmoney function
+            victim.send(owedplayer, amount)
 
     def sellaprop(self, seller):
         space = input("Which property do you wish to sell? ")
@@ -510,12 +510,13 @@ class board:
                 self.tradeprop(seller, soldto, space)
 
     def tradeprop(self, seller, soldto, soldspace, price=None):
+        #TODO: Make so that it sends the money to the right person
         if price == None:
             price = soldspace.COST
         try:
             soldto.send(seller, price)
         except ValueError:
-            self.outofmoney(soldto, price)
+            self.outofmoney(soldto, price, seller)
             soldto.send(seller, price)
         seller.owned.remove(soldspace)
         soldspace.owner = soldto
