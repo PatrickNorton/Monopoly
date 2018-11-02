@@ -170,6 +170,7 @@ class prop(space):
             if self.houses == 5:
                 self.owner.houses -= 5
                 self.owner.hotels += 1
+            self.CURRENTRENT = self.RENT[self.houses]
         except ValueError:
             print("You can't do that")
 
@@ -278,16 +279,18 @@ class drawspace(nonproperty):
         super().land(victim)
         if card is None:
             card = cardlist.pop(0)
-        victim.keptcards.append(card)
+        self.CURRENTRENT = 0
         if card.HOUSECH is not None:
-            victim.bank -= card.REWARD*victim.houses
-            victim.bank -= card.HOUSECH*victim.hotels
+            self.CURRENTRENT += card.REWARD*victim.houses
+            self.CURRENTRENT += card.HOUSECH*victim.hotels
         if card.REWARD is not None:
             if card.FROMOTHERS:
                 for player in victlist:
                     if player != victim:
+                        self.CURRENTRENT += card.REWARD
                         player.send(victim, card.REWARD)
             else:
+                self.CURRENTRENT -= card.REWARD
                 victim.bank += card.REWARD
         if card.MOVE is not None:
             global moveto
@@ -295,8 +298,9 @@ class drawspace(nonproperty):
                 moveto = card.MOVE
             else:
                 moveto = victim.space = card.MOVE
-        if not card.KEEP:
-            victim.keptcards.remove(card)
+        if card.KEEP:
+            victim.keptcards.append(card)
+        else:
             cardlist.append(card)
 
 
@@ -333,9 +337,10 @@ class incometax(nonproperty):
     def land(self, victim):
         super().land(victim)
         if victim.bank > 2000:
-            victim.bank -= 200
+            self.CURRENTRENT = 200
         else:
-            victim.bank *= 0.9
+            self.CURRENTRENT = 0.1*victim.bank
+        victim.bank -= self.CURRENTRENT
 
 
 class luxurytax(nonproperty):
@@ -344,6 +349,7 @@ class luxurytax(nonproperty):
 
     def land(self, victim):
         super().land(victim)
+        self.CURRENTRENT = 75
         victim.bank -= 75
 
 
@@ -478,11 +484,12 @@ class board:
 
     def outofmoney(self, victim, amount):
         print("You are out of money")
-        invar = input("What do you wish to do? ")
-        if invar == 'mortgage':
-            self.mortgagizer(True)
-        elif invar == 'sell':
-            self.sellaprop(victim)
+        while victim.bank < amount:
+            invar = input("What do you wish to do? ")
+            if invar == 'mortgage':
+                self.mortgagizer(True)
+            elif invar == 'sell':
+                self.sellaprop(victim)
     # TODO: Finish transaction after outofmoney function
 
     def sellaprop(self, seller):
