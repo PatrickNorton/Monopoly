@@ -516,7 +516,6 @@ class board:
             soldto.send(seller, price)
         except ValueError:
             self.outofmoney(soldto, price, seller)
-            soldto.send(seller, price)
         seller.owned.remove(soldspace)
         soldspace.owner = soldto
         soldto.owned.append(soldspace)
