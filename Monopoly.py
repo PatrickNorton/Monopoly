@@ -490,6 +490,10 @@ class board:
                 self.mortgagizer(True)
             elif invar == 'sell':
                 self.sellaprop(victim)
+        if self[victim.current].owner is None:
+            victim -= amount
+        else:
+            victim.send(self[victim.current].owner, amount)
     # TODO: Finish transaction after outofmoney function
 
     def sellaprop(self, seller):
