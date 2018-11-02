@@ -510,7 +510,6 @@ class board:
                 self.tradeprop(seller, soldto, space)
 
     def tradeprop(self, seller, soldto, soldspace, price=None):
-        #TODO: Make so that it sends the money to the right person
         if price == None:
             price = soldspace.COST
         try:
