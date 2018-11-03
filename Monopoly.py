@@ -196,6 +196,7 @@ class prop(space):
         else:
             return type(self).__name__
 
+
 class utility(prop):
     def __init__(self, name):
         super().__init__('Utility', name, 150, None, 4, 10)
@@ -510,7 +511,7 @@ class board:
                 self.tradeprop(seller, soldto, space)
 
     def tradeprop(self, seller, soldto, soldspace, price=None):
-        if price == None:
+        if price is None:
             price = soldspace.COST
         try:
             soldto.send(seller, price)
