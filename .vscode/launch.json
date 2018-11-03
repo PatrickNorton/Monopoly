@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File (Integrated Terminal)",
+            "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -54,7 +54,7 @@
             "jinja": true
         },
         {
-            "name": "Python: Current File (External Terminal)",
+            "name": "Python: Current File (Exter.)",
             "type": "python",
             "request": "launch",
             "program": "${file}",
