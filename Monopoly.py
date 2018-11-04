@@ -1,7 +1,5 @@
 
-# TODO: Doubling rent when all of a color owned, negative money dealings-with
-# Fns which should be enclosed in "try": land
-# TODO: Fix 'land' function to finish up even if player has no $
+# TODO: Doubling rent when all of a color owned
 from random import randint, shuffle
 from mod import Mod
 import webbrowser
