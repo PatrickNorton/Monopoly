@@ -285,10 +285,10 @@ class drawspace(nonproperty):
             self.CURRENTRENT += card.HOUSECH*victim.hotels
         if card.REWARD is not None:
             if card.FROMOTHERS:
-                for player in victlist:
-                    if player != victim:
-                        self.CURRENTRENT += card.REWARD
-                        player.send(victim, card.REWARD)
+                othplyr = [x for x in victlist if x != victim]
+                for player in othplyr:
+                    self.CURRENTRENT += card.REWARD
+                    player.send(victim, card.REWARD)
             else:
                 self.CURRENTRENT -= card.REWARD
                 victim.bank += card.REWARD
