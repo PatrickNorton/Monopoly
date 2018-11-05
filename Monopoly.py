@@ -1,5 +1,4 @@
 
-# TODO: Doubling rent when all of a color owned
 from random import randint, shuffle
 from mod import Mod
 import webbrowser
