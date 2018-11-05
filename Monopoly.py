@@ -390,7 +390,24 @@ class board:
                 newname = input('To what do you wish to change your name? ')
                 self.current.changename(newname)
             elif actions == 'Trade':
-                pass
+                tradeprop = None
+                while True:
+                    tradeprop = input('What do you wish to trade? ')
+                    try:
+                        if self.SPACEDICT[tradeprop].owner == self.current:
+                            break
+                    except KeyError:
+                        continue
+                tradeprop = self.SPACEDICT[tradeprop]
+                tradeto = None
+                while tradeto not in self.PLAYERDICT:
+                    tradeto = input('To whom do you wish to sell this? ')
+                tradeto = self.PLAYERDICT[tradeto]
+                tradeprice = ''
+                while not tradeprice.isdigit():
+                    tradeprice = input('For how much does it cost? ')
+                tradeprice = int(tradeprice)
+                self.tradeprop(self.current, tradeto, tradeprop, tradeprice)
                 # TODO: Trades
             elif actions == 'mortgage':
                 self.mortgagizer(True)
