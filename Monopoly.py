@@ -138,6 +138,7 @@ class prop(space):
         self.MORTGAGE = cost//2
         self.SETNM = color
         self.CURRENTRENT = rent[0]
+        self.DBRENT = False
         self.owner = None
         self.houses = 0
         self.hotels = 0
@@ -145,6 +146,8 @@ class prop(space):
 
     def land(self, victim):
         super().land(victim)
+        if self.DBRENT and not self.houses:
+            self.CURRENTRENT = 2*self.RENT
         if self.owner and victim != self.owner and not self.mortgaged:
             self.payrent(victim)
         elif not self.owner:
@@ -452,6 +455,7 @@ class board:
             try:
                 currspace.land(player, self.PLAYERS)
             except TypeError:
+                self.checkdbrent(currspace)
                 currspace.land(player)
         except ValueError:
             self.outofmoney(player, currspace.CURRENTRENT, currspace.OWNER)
@@ -518,6 +522,14 @@ class board:
         seller.owned.remove(soldspace)
         soldspace.owner = soldto
         soldto.owned.append(soldspace)
+
+    def checkdbrent(self, space):
+        try:
+            test = all(x.owner == space.owner for x in self.SPBYCLR[space])
+            if not space.houses and test:
+                space.DBRENT = True
+        except AttributeError:
+            pass
 
 
 class row:
