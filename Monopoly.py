@@ -539,7 +539,6 @@ class row:
             data = data.readlines()
             data = [x.strip() for x in data]
             self.txttopiece(data, number)
-            print(self.SPACES)
 
     def __getitem__(self, index): return self.SPACES[index]
 
