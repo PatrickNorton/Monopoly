@@ -442,7 +442,6 @@ class board:
                 invar = input(f"Player {x}, what's your name? ")
                 if not playerlist or invar not in playerlist[0].namelist:
                     playerlist.append(player(invar))
-        # TODO: Change names after the first input
         return playerlist
 
     def landing(self, player):
