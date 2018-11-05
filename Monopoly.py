@@ -339,7 +339,7 @@ class incometax(nonproperty):
         if victim.bank > 2000:
             self.CURRENTRENT = 200
         else:
-            self.CURRENTRENT = 0.1*victim.bank
+            self.CURRENTRENT = int(0.1*victim.bank)
         victim.bank -= self.CURRENTRENT
 
 
