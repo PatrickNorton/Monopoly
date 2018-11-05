@@ -410,7 +410,7 @@ class board:
         dice = (randint(1, 6), randint(1, 6))
         self[player.space].occupants.remove(player)
         player.space += sum(dice)
-        if player.space < sum(dice):
+        if player.space < sum(dice) and player.space:
             player.bank += 200
         self.landing(player)
         if moveto is not None:
