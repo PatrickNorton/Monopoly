@@ -409,10 +409,10 @@ class board:
     def move(self, player):
         global moveto
         moveto = None
-        spaces = (randint(1, 6), randint(1, 6))
+        dice = (randint(1, 6), randint(1, 6))
         self[player.space].occupants.remove(player)
-        player.space += sum(spaces)
-        if player.space < sum(spaces):
+        player.space += sum(dice)
+        if player.space < sum(dice):
             player.bank += 200
         self.landing(player)
         if moveto is not None:
@@ -422,7 +422,7 @@ class board:
                 self[10].lockup(player)
             else:
                 self.landing(player)
-        return spaces
+        return dice
 
     def sendtojail(self, victim):
         self[10].jailbirds += victim
