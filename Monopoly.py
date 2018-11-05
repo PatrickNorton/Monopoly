@@ -419,9 +419,7 @@ class board:
             elif actions == 'houses':
                 self.addahouse()
             dice = self.move(self.current)
-            if dice[0] == dice[1]:
-                pass
-            else:
+            if dice[0] != dice[1]:
                 self.turnno += 1
                 self.current = self.PLAYERS[self.turnno]
 
