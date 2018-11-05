@@ -277,10 +277,9 @@ class drawspace(nonproperty):
     def __init__(self, name):
         super().__init__(name)
 
-    def land(self, victim, victlist, cardlist, card=None):
+    def land(self, victim, victlist):
         super().land(victim)
-        if card is None:
-            card = cardlist.pop(0)
+        card = self.CARDS.pop(0)
         self.CURRENTRENT = 0
         if card.HOUSECH is not None:
             self.CURRENTRENT += card.REWARD*victim.houses
@@ -303,33 +302,33 @@ class drawspace(nonproperty):
         if card.KEEP:
             victim.keptcards.append(card)
         else:
-            cardlist.append(card)
+            self.CARDS.append(card)
 
 
 class commchest(drawspace):
     with open('commchestcards.txt') as thecards:
         thecards.readlines()
-        cccards = [cards(x) for x in thecards]
-        shuffle(cccards)
+        CARDS = [cards(x) for x in thecards]
+        shuffle(CARDS)
 
     def __init__(self):
         super().__init__('Community Chest')
 
     def land(self, victim, victlist):
-        super().land(victim, victlist, self.cccards)
+        super().land(victim, victlist)
 
 
 class chance(drawspace):
     with open('chancecards.txt') as thecards:
         thecards = thecards.readlines()
-        chcards = [cards(x) for x in thecards]
-        shuffle(chcards)
+        CARDS = [cards(x) for x in thecards]
+        shuffle(CARDS)
 
     def __init__(self):
         super().__init__('Chance')
 
     def land(self, victim, victlist):
-        super().land(victim, victlist, self.chcards)
+        super().land(victim, victlist)
 
 
 class incometax(nonproperty):
