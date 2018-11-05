@@ -383,6 +383,7 @@ class board:
         self.current = self.PLAYERS[0]
         self.turnno = Mod(0, len(self.PLAYERS))
         while game:
+            self.OTHPLYR = [x for x in self.PLAYERS if x != self.current]
             actions = input("Are there any actions you wish to perform? ")
             actions = actions.lower()
             if actions == 'change name':
@@ -447,7 +448,7 @@ class board:
         currspace = self[player.space]
         try:
             try:
-                currspace.land(player, self.PLAYERS)
+                currspace.land(player, self.OTHPLYR)
             except TypeError:
                 self.checkdbrent(currspace)
                 currspace.land(player)
