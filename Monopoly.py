@@ -351,7 +351,7 @@ class luxurytax(nonproperty):
     def land(self, victim):
         super().land(victim)
         self.CURRENTRENT = 75
-        victim.bank -= 75
+        victim.bank -= self.CURRENTRENT
 
 
 class board:
