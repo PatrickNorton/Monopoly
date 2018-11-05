@@ -496,17 +496,23 @@ class board:
             victim.send(owedplayer, amount)
 
     def sellaprop(self, seller):
-        space = input("Which property do you wish to sell? ")
-        space = space.capwords()
-        if space in self.SPACEDICT and space in seller.owned:
-            space = self.SPACEDICT[space]
-        soldvar = input("To whom do you wish to sell the property? ")
-        soldvar = soldvar.lower()
-        if soldvar in self.PLAYERS:
-            soldto = self.PLAYERDICT[soldvar]
-            affirm = input(f"{soldvar}, do you affirm? ")
-            if affirm.lower().startswith('y'):
-                self.tradeprop(seller, soldto, space)
+        while True:
+            space = input("Which property do you wish to sell? ")
+            space = space.capwords()
+            if space in self.SPACEDICT and space in seller.owned:
+                space = self.SPACEDICT[space]
+                break
+        while True:
+            soldvar = input("To whom do you wish to sell the property? ")
+            soldvar = soldvar.lower()
+            if soldvar in self.PLAYERS:
+                soldto = self.PLAYERDICT[soldvar]
+                break
+        affirm = input(f"{soldvar}, do you affirm? ")
+        if affirm.lower().startswith('y'):
+            self.tradeprop(seller, soldto, space)
+        else:
+            print('Transacton denied')
 
     def tradeprop(self, seller, soldto, soldspace, price=None):
         if price is None:
