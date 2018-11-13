@@ -8,6 +8,8 @@ class account:
     def __init__(self, value):
         if isinstance(value, int):
             var = value
+        elif isinstance(value, float):
+            var = int(value)
         elif isinstance(value, account):
             var = value.VALUE
         else:
