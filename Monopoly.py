@@ -24,10 +24,10 @@ class account:
     def __str__(self): return str(self.VALUE)
 
     def __add__(self, other):
-        return account(self.VALUE+account(other).VALUE)
+        return round(account(self.VALUE+account(other).VALUE))
 
     def __sub__(self, other):
-        return account(self.VALUE-account(other).VALUE)
+        return round(account(self.VALUE-account(other).VALUE))
 
     def __mul__(self, other):
         return round(account(self.VALUE*account(other).VALUE))
