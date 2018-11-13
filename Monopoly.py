@@ -121,7 +121,10 @@ class space:
     def __init__(self, color, name):
         self.COLOR = color
         self.NAME = name
-        self.CONSTANTS = [self.COLOR, self.NAME]
+        self.CONSTANTS = {
+            'color': self.COLOR,
+            'name': self.NAME
+        }
         self.occupants = []
 
     def __eq__(self, other): return self.NAME == other.NAME
