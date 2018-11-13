@@ -30,7 +30,7 @@ class account:
         return account(self.VALUE-account(other).VALUE)
 
     def __mul__(self, other):
-        return account(self.VALUE*account(other).VALUE)
+        return round(account(self.VALUE*account(other).VALUE))
 
     def __iadd__(self, other):
         if self+other >= 0:
@@ -59,6 +59,8 @@ class account:
     def __eq__(self, other):
         return self.VALUE == account(other).VALUE
     __radd__, __rsub__, __rmul__ = __add__, __sub__, __mul__
+
+    def __round__(self): return account(self.VALUE//1)
 
     def transferto(self, other, amt):
         self -= amt
