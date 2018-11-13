@@ -136,8 +136,7 @@ class space:
 
     def __eq__(self, other): return self.NAME == other.NAME
 
-    def __iter__(self):
-        yield from self.CONSTANTS
+    def __iter__(self): yield from self.CONSTANTS
 
     def land(self, victim): self.occupants.append(victim)
 
