@@ -123,7 +123,14 @@ class space:
         self.NAME = name
         self.CONSTANTS = {
             'color': self.COLOR,
-            'name': self.NAME
+            'name': self.NAME,
+            'cost': None,
+            'rent': None,
+            'housecost': None,
+            'mortgage': None,
+            'setnm': None,
+            'currentrent': None,
+            'dbrent': None
         }
         self.occupants = []
 
