@@ -9,7 +9,7 @@ class account:
         if isinstance(value, int):
             var = value
         elif isinstance(value, float):
-            var = int(value)
+            var = value
         elif isinstance(value, account):
             var = value.VALUE
         else:
