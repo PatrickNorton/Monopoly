@@ -121,9 +121,13 @@ class space:
     def __init__(self, color, name):
         self.COLOR = color
         self.NAME = name
+        self.CONSTANTS = [self.COLOR, self.NAME]
         self.occupants = []
 
     def __eq__(self, other): return self.NAME == other.NAME
+
+    def __iter__(self):
+        yield from self.CONSTANTS
 
     def land(self, victim): self.occupants.append(victim)
 
@@ -138,6 +142,17 @@ class prop(space):
         self.SETNM = color
         self.CURRENTRENT = rent[0]
         self.DBRENT = False
+        self.CONSTANTS = {
+            'color': self.COLOR,
+            'name': self.NAME,
+            'cost': self.COST,
+            'rent': self.RENT,
+            'housecost': self.HOUSECOST,
+            'mortgage': self.MORTGAGE,
+            'setnm': self.SETNM,
+            'currentrent': self.CURRENTRENT,
+            'dbrent': self.DBRENT
+        }
         self.owner = None
         self.houses = 0
         self.hotels = 0
@@ -236,6 +251,17 @@ class nonproperty(space):
     def __init__(self, name):
         super().__init__(None, name)
         self.SETNM = type(self).__name__
+        self.CONSTANTS = {
+            'color': self.COLOR,
+            'name': self.NAME,
+            'cost': None,
+            'rent': None,
+            'housecost': None,
+            'mortgage': None,
+            'setnm': self.SETNM,
+            'currentrent': None,
+            'dbrent': None
+        }
 
     def __eq__(self, other): return type(self) == type(other)
 
@@ -266,15 +292,20 @@ class freepark(nonproperty):
 class go(nonproperty):
     def __init__(self):
         super().__init__('Go')
+        self.CURRENTRENT = -200
+        self.CONSTANTS['currentrent'] = self.CURRENTRENT
 
     def land(self, victim):
         super().land(victim)
-        victim.bank += 200
+        self.CURRENTRENT = -200
+        victim.bank -= self.CURRENTRENT
 
 
 class drawspace(nonproperty):
     def __init__(self, name):
         super().__init__(name)
+        self.CURRENTRENT = 0
+        self.CONSTANTS['currentrent'] = self.CURRENTRENT
 
     def land(self, victim, victlist):
         super().land(victim)
@@ -332,6 +363,8 @@ class chance(drawspace):
 class incometax(nonproperty):
     def __init__(self):
         super().__init__('Income tax')
+        self.CURRENTRENT = 200
+        self.CONSTANTS['currentrent'] = self.CURRENTRENT
 
     def land(self, victim):
         super().land(victim)
@@ -345,6 +378,8 @@ class incometax(nonproperty):
 class luxurytax(nonproperty):
     def __init__(self):
         super().__init__('Luxury tax')
+        self.CURRENTRENT = 75
+        self.CONSTANTS['currentrent'] = self.CURRENTRENT
 
     def land(self, victim):
         super().land(victim)
