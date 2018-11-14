@@ -142,6 +142,8 @@ class space:
 
     def __iter__(self): yield from self.CONSTANTS
 
+    def __getitem__(self, index): return self.CONSTANTS[index]
+
     def land(self, victim): self.occupants.append(victim)
 
 
