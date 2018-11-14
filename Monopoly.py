@@ -503,7 +503,7 @@ class board:
                 self.checkdbrent(currspace)
                 currspace.land(player)
             except FromOtherException as e:
-                self.sendtoall(e.args[0])
+                self.sendtoall(player, e.args[0])
         except ValueError:
             self.outofmoney(player, currspace.CURRENTRENT, currspace.OWNER)
 
@@ -584,9 +584,12 @@ class board:
         except AttributeError:
             pass
 
-    def sendtoall(self, amount):
+    def sendtoall(self, victim, amount):
         for x in self.OTHPLYR:
-            self.current.send(x, amount)
+            try:
+                victim.send(x, amount)
+            except ValueError:
+                self.outofmoney(victim, amount, x)
 
 
 class row:
