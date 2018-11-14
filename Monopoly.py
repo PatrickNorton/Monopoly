@@ -240,8 +240,8 @@ class utility(prop):
             paidvar = 10
         else:
             paidvar = 4
-        die1, die2 = randint(1, 6), randint(1, 6)
-        self.CURRENTRENT = paidvar*sum((die1, die2))
+        utildice = randint(1, 6), randint(1, 6)
+        self.CURRENTRENT = paidvar*sum(utildice)
         victim.send(self.owner, self.CURRENTRENT)
 
 
