@@ -5,6 +5,10 @@ from mod import Mod
 import webbrowser
 
 
+class FromOtherException(Exception):
+    pass
+
+
 class account:
     def __init__(self, value):
         if isinstance(value, int):
@@ -323,7 +327,7 @@ class drawspace(nonproperty):
         self.CURRENTRENT = 0
         self.CONSTANTS['currentrent'] = self.CURRENTRENT
 
-    def land(self, victim, victlist):
+    def land(self, victim):
         super().land(victim)
         card = self.CARDS.pop(0)
         self.CURRENTRENT = 0
@@ -332,9 +336,7 @@ class drawspace(nonproperty):
             self.CURRENTRENT += card.HOUSECH*victim.hotels
         if card.REWARD is not None:
             if card.FROMOTHERS:
-                for player in victlist:
-                    self.CURRENTRENT += card.REWARD
-                    player.send(victim, card.REWARD)
+                raise FromOtherException(card.REWARD)
             else:
                 self.CURRENTRENT -= card.REWARD
                 victim.bank += card.REWARD
@@ -498,10 +500,10 @@ class board:
         currspace = self[player.space]
         try:
             try:
-                currspace.land(player, self.OTHPLYR)
-            except TypeError:
                 self.checkdbrent(currspace)
                 currspace.land(player)
+            except FromOtherException as e:
+                self.sendtoall(e.args[0])
         except ValueError:
             self.outofmoney(player, currspace.CURRENTRENT, currspace.OWNER)
 
@@ -581,6 +583,10 @@ class board:
                 space.DBRENT = True
         except AttributeError:
             pass
+
+    def sendtoall(self, amount):
+        for x in self.OTHPLYR:
+            self.current.send(x, amount)
 
 
 class row:
