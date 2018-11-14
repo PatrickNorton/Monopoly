@@ -361,8 +361,8 @@ class commchest(drawspace):
     def __init__(self):
         super().__init__('Community Chest')
 
-    def land(self, victim, victlist):
-        super().land(victim, victlist)
+    def land(self, victim):
+        super().land(victim)
 
 
 class chance(drawspace):
@@ -374,8 +374,8 @@ class chance(drawspace):
     def __init__(self):
         super().__init__('Chance')
 
-    def land(self, victim, victlist):
-        super().land(victim, victlist)
+    def land(self, victim):
+        super().land(victim)
 
 
 class incometax(nonproperty):
