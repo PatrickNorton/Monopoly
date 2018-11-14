@@ -241,7 +241,7 @@ class utility(prop):
         else:
             paidvar = 4
         die1, die2 = randint(1, 6), randint(1, 6)
-        self.CURRENTRENT = paidvar*sum(die1, die2)
+        self.CURRENTRENT = paidvar*sum((die1, die2))
         victim.send(self.owner, self.CURRENTRENT)
 
 
