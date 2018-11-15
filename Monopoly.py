@@ -1,5 +1,4 @@
 
-# TODO: Fix card.fromothers to not require the try/except loop (Line 500)
 from random import randint, shuffle
 from mod import Mod
 import webbrowser
